@@ -47,7 +47,7 @@ VERCEL="true"
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/martinfrancis/levrx-exchange.git
+   git clone https://github.com/buildmoreandmore-cpu/levrx-exchange.git
    cd levrx-exchange
    ```
 
