@@ -585,7 +585,7 @@ export default function Home() {
                 <strong>Disclaimer:</strong> LevrX is an informational tool and does not provide legal or financial advice.
               </p>
               <p className="text-gray-400 text-sm">
-                Copyright © 2024 LevrX. All rights reserved.
+                Copyright © 2025 LevrX. All rights reserved.
               </p>
             </div>
           </div>
