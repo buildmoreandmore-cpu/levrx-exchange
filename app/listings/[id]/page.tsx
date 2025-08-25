@@ -5,6 +5,8 @@ import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { UserButton } from '@clerk/nextjs'
 
+export const dynamic = 'force-dynamic'
+
 interface Listing {
   id: string
   mode: 'HAVE' | 'WANT'

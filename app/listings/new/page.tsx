@@ -5,6 +5,8 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { UserButton } from '@clerk/nextjs'
 
+export const dynamic = 'force-dynamic'
+
 export default function NewListing() {
   const router = useRouter()
   const searchParams = useSearchParams()
