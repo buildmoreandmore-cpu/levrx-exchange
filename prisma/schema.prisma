@@ -6,7 +6,7 @@ generator client {
 datasource db {
   provider   = "postgresql"
   url        = env("DATABASE_URL")
-  extensions = [vector]
+  // extensions = [vector]
 }
 
 enum Role {
@@ -127,7 +127,7 @@ model Listing {
   assetId          String?
   wantId           String?
   status           ListingStatus     @default(ACTIVE)
-  vectorEmbedding  Unsupported("vector(1536)")?
+  // vectorEmbedding  Unsupported("vector(1536)")? // Temporarily disabled until pgvector is enabled
   createdAt        DateTime          @default(now())
   
   // Relations
