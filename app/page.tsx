@@ -1,9 +1,9 @@
 import Link from 'next/link'
+import { SignInButton, SignedIn, SignedOut } from '@clerk/nextjs'
 
 export const dynamic = 'force-dynamic'
 
 export default function Home() {
-  const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
@@ -17,18 +17,21 @@ export default function Home() {
           </div>
           
           <div>
-            {isDemoMode ? (
+            <SignedOut>
+              <SignInButton mode="modal">
+                <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium">
+                  Sign In
+                </button>
+              </SignInButton>
+            </SignedOut>
+            <SignedIn>
               <Link 
-                href="/demo/dashboard"
+                href="/dashboard"
                 className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium"
               >
-                View Demo
+                Dashboard
               </Link>
-            ) : (
-              <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium">
-                Sign In (Setup Required)
-              </button>
-            )}
+            </SignedIn>
           </div>
         </div>
       </header>
@@ -47,23 +50,21 @@ export default function Home() {
             mutually beneficial deals using your equity, cashflow, skills, or assets.
           </p>
           
-          {isDemoMode ? (
+          <SignedOut>
+            <SignInButton mode="modal">
+              <button className="bg-indigo-600 hover:bg-indigo-700 text-white text-lg px-8 py-4 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all">
+                Get Started
+              </button>
+            </SignInButton>
+          </SignedOut>
+          <SignedIn>
             <Link 
-              href="/demo/dashboard"
+              href="/dashboard"
               className="bg-indigo-600 hover:bg-indigo-700 text-white text-lg px-8 py-4 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all inline-block"
             >
-              Try Demo
+              Go to Dashboard
             </Link>
-          ) : (
-            <div className="text-center">
-              <button className="bg-gray-400 text-white text-lg px-8 py-4 rounded-lg font-semibold shadow-lg mb-4 cursor-not-allowed">
-                Get Started (Setup Required)
-              </button>
-              <p className="text-gray-600">
-                Configure Clerk, Supabase, and Anthropic API to enable full functionality
-              </p>
-            </div>
-          )}
+          </SignedIn>
         </div>
 
         {/* Features */}
