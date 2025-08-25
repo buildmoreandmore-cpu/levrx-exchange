@@ -1,0 +1,192 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [vector]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum KycStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum AssetType {
+  EQUITY
+  CASHFLOW
+  EQUIPMENT
+  CREDIT
+  SKILL
+  OTHER
+}
+
+enum WantCategory {
+  CASH
+  PARTNER
+  EQUIPMENT
+  TENANT
+  BUYER
+  OTHER
+}
+
+enum ListingMode {
+  HAVE
+  WANT
+}
+
+enum ListingStatus {
+  ACTIVE
+  PAUSED
+  ARCHIVED
+}
+
+enum AgreementStatus {
+  DRAFT
+  SENT
+  SIGNED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  
+  // Relations
+  profile           Profile?
+  assets            Asset[]
+  wants             Want[]
+  listings          Listing[]
+  sentMatches       Match[]         @relation("ListingAMatches")
+  receivedMatches   Match[]         @relation("ListingBMatches") 
+  sentMessages      Message[]       @relation("SentMessages")
+  agreementDrafts   AgreementDraft[]
+
+  @@map("users")
+}
+
+model Profile {
+  id        String    @id @default(cuid())
+  userId    String    @unique
+  location  String?
+  bio       String?
+  kycStatus KycStatus @default(PENDING)
+  
+  // Relations
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("profiles")
+}
+
+model Asset {
+  id               String      @id @default(cuid())
+  userId           String
+  type             AssetType
+  title            String
+  description      String
+  estValueNumeric  Float?
+  terms            Json?
+  createdAt        DateTime    @default(now())
+  
+  // Relations
+  user             User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listings         Listing[]
+  
+  @@map("assets")
+}
+
+model Want {
+  id                String       @id @default(cuid())
+  userId            String
+  category          WantCategory
+  title             String
+  description       String
+  targetValueNumeric Float?
+  constraints       Json?
+  createdAt         DateTime     @default(now())
+  
+  // Relations
+  user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listings          Listing[]
+  
+  @@map("wants")
+}
+
+model Listing {
+  id               String            @id @default(cuid())
+  userId           String
+  mode             ListingMode
+  assetId          String?
+  wantId           String?
+  status           ListingStatus     @default(ACTIVE)
+  vectorEmbedding  Unsupported("vector(1536)")?
+  createdAt        DateTime          @default(now())
+  
+  // Relations
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  asset            Asset?            @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  want             Want?             @relation(fields: [wantId], references: [id], onDelete: Cascade)
+  matchesAsA       Match[]           @relation("ListingAMatches")
+  matchesAsB       Match[]           @relation("ListingBMatches")
+  
+  @@map("listings")
+}
+
+model Match {
+  id                   String             @id @default(cuid())
+  listingAId           String
+  listingBId           String
+  score                Float
+  rationale            String?
+  suggestedStructures  Json?
+  createdAt            DateTime           @default(now())
+  
+  // Relations
+  listingA             Listing            @relation("ListingAMatches", fields: [listingAId], references: [id], onDelete: Cascade)
+  listingB             Listing            @relation("ListingBMatches", fields: [listingBId], references: [id], onDelete: Cascade)
+  messages             Message[]
+  agreementDrafts      AgreementDraft[]
+  
+  @@unique([listingAId, listingBId])
+  @@map("matches")
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  matchId    String
+  fromUserId String
+  body       String
+  createdAt  DateTime @default(now())
+  
+  // Relations
+  match      Match    @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  fromUser   User     @relation("SentMessages", fields: [fromUserId], references: [id], onDelete: Cascade)
+  
+  @@map("messages")
+}
+
+model AgreementDraft {
+  id        String          @id @default(cuid())
+  matchId   String
+  title     String
+  content   String          // Markdown content
+  status    AgreementStatus @default(DRAFT)
+  createdAt DateTime        @default(now())
+  
+  // Relations
+  match     Match           @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  createdBy User            @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdById String
+  
+  @@map("agreement_drafts")
+}
