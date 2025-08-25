@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { SignInButton, SignedIn, SignedOut } from '@clerk/nextjs'
 import Hero from '@/components/landing/Hero'
+import TradeGrid from '@/components/landing/TradeGrid'
 import FAQ, { faqData } from '@/components/landing/FAQ'
 import LeadCapture from '@/components/landing/LeadCapture'
 
@@ -84,6 +85,9 @@ export default function Home() {
 
         {/* Hero Section */}
         <Hero hasVideo={hasVideo} />
+
+        {/* Trade Grid Section */}
+        <TradeGrid />
 
         {/* Primary CTA Group */}
         <section className="py-12 bg-white">
