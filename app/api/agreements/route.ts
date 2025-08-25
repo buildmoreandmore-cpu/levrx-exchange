@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
       }]
     })
 
-    const content = response.content[0]?.text || 'Agreement content generation failed'
+    const content = (response.content[0] as any)?.text || 'Agreement content generation failed'
 
     // Save the agreement draft
     const agreement = await prisma.agreementDraft.create({
