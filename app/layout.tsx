@@ -15,7 +15,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "LevrX — The Real Estate Exchange [TEST UPDATE]",
+  title: "LevrX — The Real Estate Exchange",
   description: "Leverage what you have to get what you want. AI-matched real estate opportunities.",
   openGraph: {
     title: "LevrX — The Real Estate Exchange",
