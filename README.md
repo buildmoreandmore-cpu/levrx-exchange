@@ -1,36 +1,153 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LevrX - The Leverage Exchange
 
-## Getting Started
+LevrX is a marketplace where users can list what they have (equity, cash flow, equipment, credit capacity, skills) and what they want (cash, partner, equipment, tenant-buyer, etc.). The platform uses AI to match listings and propose deal structures.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **User Authentication**: Clerk integration with Apple Sign In, Google Sign In, and Email (passwordless or email+password)
+- **Listing Creation**: Create "Have" and "Want" listings with detailed descriptions
+- **AI-Powered Matching**: Intelligent matching between complementary listings
+- **Deal Structure Generation**: AI-generated deal structures for matches
+- **Agreement Drafts**: Generate Letter of Intent templates
+- **Real-time Dashboard**: Track listings, matches, and agreements
+
+## Tech Stack
+
+- **Frontend**: Next.js 14 (App Router), TypeScript, TailwindCSS
+- **Database**: PostgreSQL (Supabase) with Prisma ORM
+- **Vector Search**: pgvector for embeddings (configured but not implemented in MVP)
+- **Authentication**: Clerk
+- **AI**: Anthropic Claude API (claude-3-5-sonnet)
+- **File Storage**: Supabase Storage (for future attachments)
+- **Deployment**: Vercel (production)
+
+## Environment Variables
+
+Create a `.env.local` file with the following variables:
+
+```env
+# Clerk Authentication
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_your_key_here
+CLERK_SECRET_KEY=sk_test_your_key_here
+
+# Anthropic AI
+ANTHROPIC_API_KEY=sk-ant-your_key_here
+
+# Database & Supabase
+DATABASE_URL="postgresql://user:password@host:5432/database"
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+
+# Environment
+VERCEL="true"
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Setup Instructions
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/martinfrancis/levrx-exchange.git
+   cd levrx-exchange
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
 
-## Learn More
+3. **Set up Supabase**:
+   - Create a new Supabase project
+   - Enable the pgvector extension in the SQL editor:
+     ```sql
+     create extension vector;
+     ```
+   - Copy the connection string and API keys to `.env.local`
 
-To learn more about Next.js, take a look at the following resources:
+4. **Set up Clerk**:
+   - Create a Clerk application
+   - Configure sign-in methods (Apple, Google, Email)
+   - Copy the keys to `.env.local`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+5. **Set up Anthropic API**:
+   - Get an API key from Anthropic
+   - Add it to `.env.local`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+6. **Initialize the database**:
+   ```bash
+   npx prisma generate
+   npx prisma db push
+   ```
 
-## Deploy on Vercel
+7. **Run the development server**:
+   ```bash
+   npm run dev
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+8. **Open the application**:
+   Visit [http://localhost:3000](http://localhost:3000)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Database Schema
+
+The application uses the following core entities:
+
+- **User**: Authentication and profile information
+- **Profile**: Extended user profile with KYC status
+- **Asset**: Things users have (equity, cashflow, equipment, etc.)
+- **Want**: Things users want (cash, partners, equipment, etc.)
+- **Listing**: Active marketplace listings (Have or Want)
+- **Match**: AI-generated matches between complementary listings
+- **Message**: Communication between matched users
+- **AgreementDraft**: Generated LOI and agreement templates
+
+## API Endpoints
+
+- `POST /api/listings` - Create a new listing
+- `GET /api/listings` - Get all listings with optional filters
+- `GET /api/listings/[id]` - Get a specific listing
+- `POST /api/match` - Find matches for a listing
+- `POST /api/agreements/draft` - Generate agreement draft
+- `POST /api/messages` - Send a message in a match
+
+## Matching Algorithm (MVP)
+
+The current matching system uses:
+1. **Rule-based scoring** (70%): Matches asset types to want categories
+2. **Placeholder for embeddings** (30%): Vector similarity (configured but not active in MVP)
+3. **AI enhancement**: Claude generates rationale and deal structures for matches
+
+## Legal Disclaimer
+
+All agreements generated by this platform are for informational use only. This is not legal advice. Users should consult an attorney before signing any agreements.
+
+## Deployment
+
+The application is configured for deployment on Vercel:
+
+1. **Connect to Vercel**:
+   ```bash
+   npx vercel
+   ```
+
+2. **Set environment variables** in Vercel dashboard
+
+3. **Deploy**:
+   ```bash
+   npx vercel --prod
+   ```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## License
+
+MIT License - see LICENSE file for details.
+
+## Support
+
+For issues and feature requests, please create an issue on GitHub.
