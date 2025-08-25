@@ -118,8 +118,8 @@ export async function POST(request: NextRequest) {
               : ''
 
             const structuresPrompt = buildDealStructuresPrompt(
-              listing.mode === 'HAVE' ? listing.asset : potentialMatch.asset,
-              listing.mode === 'WANT' ? listing.want : potentialMatch.want
+              listing.mode === 'HAVE' ? (listing.asset || {}) : (potentialMatch.asset || {}),
+              listing.mode === 'WANT' ? (listing.want || {}) : (potentialMatch.want || {})
             )
             const structuresResponse = await anthropic.messages.create({
               model: 'claude-3-5-sonnet-20241022',
