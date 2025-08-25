@@ -4,7 +4,7 @@ export const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 })
 
-export function buildMatchRationalePrompt(haveSummary: string, wantSummary: string, constraints?: any): string {
+export function buildMatchRationalePrompt(haveSummary: string, wantSummary: string, constraints?: Record<string, unknown>): string {
   return `Analyze this potential business match and provide a rationale in 3-5 bullet points explaining why this could be a good fit:
 
 HAVE: ${haveSummary}
@@ -20,7 +20,7 @@ Focus on:
 Respond with concise bullet points only.`
 }
 
-export function buildDealStructuresPrompt(have: any, want: any): string {
+export function buildDealStructuresPrompt(have: Record<string, unknown>, want: Record<string, unknown>): string {
   return `Given this potential business match, suggest 2 different deal structures:
 
 HAVE: ${JSON.stringify(have)}
@@ -36,7 +36,7 @@ For each structure, provide:
 Format as JSON with structure: { "structures": [{ "name": "", "howItWorks": "", "keyTerms": [], "risks": [], "nextSteps": [] }] }`
 }
 
-export function buildAgreementDraftPrompt(structureChoice: any, parties: any, keyTerms: any): string {
+export function buildAgreementDraftPrompt(structureChoice: Record<string, unknown>, parties: Record<string, unknown>, keyTerms: Record<string, unknown>): string {
   return `Create a Letter of Intent (LOI) template in Markdown format for this business arrangement:
 
 STRUCTURE: ${JSON.stringify(structureChoice)}

@@ -21,7 +21,7 @@ interface Listing {
     title: string
     description: string
     estValueNumeric?: number
-    terms?: any
+    terms?: Record<string, unknown>
   }
   want?: {
     id: string
@@ -29,7 +29,7 @@ interface Listing {
     title: string
     description: string
     targetValueNumeric?: number
-    constraints?: any
+    constraints?: Record<string, unknown>
   }
 }
 
@@ -37,7 +37,15 @@ interface Match {
   id: string
   score: number
   rationale?: string
-  suggestedStructures?: any
+  suggestedStructures?: {
+    structures: Array<{
+      name: string
+      howItWorks: string
+      keyTerms: string[]
+      risks: string[]
+      nextSteps: string[]
+    }>
+  }
   listingB: Listing
 }
 
@@ -50,7 +58,7 @@ export default function ListingDetail() {
 
   useEffect(() => {
     fetchListing()
-  }, [params.id])
+  }, [params.id]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchListing = async () => {
     try {
@@ -166,7 +174,7 @@ export default function ListingDetail() {
                     {listing.mode === 'HAVE' ? 'Asset Type' : 'Category'}
                   </h4>
                   <p className="text-gray-600">
-                    {listing.mode === 'HAVE' ? item?.type : item?.category}
+                    {listing.mode === 'HAVE' ? (item as { type?: string })?.type : (item as { category?: string })?.category}
                   </p>
                 </div>
                 
@@ -191,8 +199,8 @@ export default function ListingDetail() {
                   </h4>
                   <p className="text-gray-600 whitespace-pre-wrap">
                     {listing.mode === 'HAVE' 
-                      ? listing.asset?.terms?.text 
-                      : listing.want?.constraints?.text}
+                      ? (listing.asset?.terms as { text?: string })?.text 
+                      : (listing.want?.constraints as { text?: string })?.text}
                   </p>
                 </div>
               )}
@@ -255,10 +263,10 @@ export default function ListingDetail() {
                         </div>
                       )}
 
-                      {match.suggestedStructures?.structures?.length > 0 && (
+                      {(match.suggestedStructures?.structures?.length ?? 0) > 0 && (
                         <div className="mb-3">
                           <p className="text-xs text-gray-500 mb-1">Suggested Deal Structures:</p>
-                          {match.suggestedStructures.structures.slice(0, 2).map((structure: any, idx: number) => (
+                          {match.suggestedStructures?.structures?.slice(0, 2).map((structure, idx: number) => (
                             <div key={idx} className="text-sm text-gray-700 mb-1">
                               • {structure.name}
                             </div>

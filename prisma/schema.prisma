@@ -67,8 +67,6 @@ model User {
   assets            Asset[]
   wants             Want[]
   listings          Listing[]
-  sentMatches       Match[]         @relation("ListingAMatches")
-  receivedMatches   Match[]         @relation("ListingBMatches") 
   sentMessages      Message[]       @relation("SentMessages")
   agreementDrafts   AgreementDraft[]
 

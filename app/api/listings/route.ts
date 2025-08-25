@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { currentUser } from '@clerk/nextjs/server'
 import { prisma } from '@/lib/db'
-import { anthropic } from '@/lib/anthropic'
 
 export async function POST(request: NextRequest) {
   try {
@@ -36,7 +35,7 @@ export async function POST(request: NextRequest) {
           title,
           description,
           estValueNumeric: estValue,
-          terms: terms ? { text: terms } : null,
+          terms: terms ? { text: terms } : undefined,
         },
       })
       assetId = asset.id
@@ -48,23 +47,15 @@ export async function POST(request: NextRequest) {
           title,
           description,
           targetValueNumeric: targetValue,
-          constraints: constraints ? { text: constraints } : null,
+          constraints: constraints ? { text: constraints } : undefined,
         },
       })
       wantId = want.id
     }
 
-    // Generate embedding for the listing
-    const embeddingText = `${title} ${description} ${terms || constraints || ''}`
-    
-    let vectorEmbedding = null
-    try {
-      // Note: For MVP, we'll skip embeddings since they require a different API
-      // In production, you'd use a service like OpenAI embeddings or similar
-      console.log('Skipping embedding generation for MVP')
-    } catch (error) {
-      console.error('Error generating embedding:', error)
-    }
+    // Note: For MVP, we'll skip embeddings since they require a different API
+    // In production, you'd use a service like OpenAI embeddings or similar
+    console.log('Skipping embedding generation for MVP')
 
     // Create listing
     const listing = await prisma.listing.create({
