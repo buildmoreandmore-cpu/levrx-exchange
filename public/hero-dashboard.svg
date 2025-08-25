@@ -1,0 +1,46 @@
+<svg width="1200" height="675" viewBox="0 0 1200 675" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="1200" height="675" fill="#F9FAFB"/>
+<rect x="40" y="40" width="1120" height="595" rx="12" fill="white" stroke="#E5E7EB" stroke-width="2"/>
+<rect x="40" y="40" width="1120" height="50" fill="#111827"/>
+<circle cx="70" cy="65" r="6" fill="#F87171"/>
+<circle cx="90" cy="65" r="6" fill="#FBBF49"/>
+<circle cx="110" cy="65" r="6" fill="#34D058"/>
+<text x="140" y="70" font-family="Inter, sans-serif" font-size="14" font-weight="500" fill="white">LevrX Dashboard</text>
+
+<rect x="80" y="130" width="350" height="400" rx="8" fill="#FFFFFF" stroke="#E5E7EB"/>
+<text x="100" y="160" font-family="Inter, sans-serif" font-size="18" font-weight="600" fill="#111827">Active Listings</text>
+
+<rect x="100" y="180" width="310" height="80" rx="6" fill="#DCFEFF" stroke="#3AB2FF"/>
+<rect x="110" y="190" width="40" height="20" rx="10" fill="#3AB2FF"/>
+<text x="118" y="203" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="white">HAVE</text>
+<text x="160" y="205" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#111827">Downtown Office Building</text>
+<text x="160" y="220" font-family="Inter, sans-serif" font-size="12" fill="#6B7B85">$2.4M • 12,000 sq ft</text>
+
+<rect x="100" y="280" width="310" height="80" rx="6" fill="#F0FDF4" stroke="#10B981"/>
+<rect x="110" y="290" width="40" height="20" rx="10" fill="#10B981"/>
+<text x="116" y="303" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="white">WANT</text>
+<text x="160" y="305" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#111827">Multifamily Investment</text>
+<text x="160" y="320" font-family="Inter, sans-serif" font-size="12" fill="#6B7B85">$500K-$2M • Southeast</text>
+
+<rect x="470" y="130" width="350" height="400" rx="8" fill="#FFFFFF" stroke="#E5E7EB"/>
+<text x="490" y="160" font-family="Inter, sans-serif" font-size="18" font-weight="600" fill="#111827">AI Matches</text>
+
+<rect x="490" y="180" width="310" height="90" rx="6" fill="#FFFFFF" stroke="#E5E7EB"/>
+<rect x="500" y="190" width="60" height="20" rx="10" fill="#10B981"/>
+<text x="508" y="203" font-family="Inter, sans-serif" font-size="9" font-weight="600" fill="white">94% Match</text>
+<text x="570" y="205" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#111827">Office ↔ Capital Partner</text>
+<text x="500" y="225" font-family="Inter, sans-serif" font-size="12" fill="#6B7B85">Perfect market fit for downtown office investment</text>
+
+<rect x="860" y="130" width="260" height="400" rx="8" fill="#FFFFFF" stroke="#E5E7EB"/>
+<text x="880" y="160" font-family="Inter, sans-serif" font-size="18" font-weight="600" fill="#111827">Market Activity</text>
+
+<rect x="880" y="180" width="220" height="70" rx="6" fill="#F9FAFB"/>
+<text x="890" y="205" font-family="Inter, sans-serif" font-size="20" font-weight="700" fill="#111827">$847M</text>
+<text x="890" y="220" font-family="Inter, sans-serif" font-size="12" fill="#6B7B85">Total Deal Volume</text>
+<text x="890" y="235" font-family="Inter, sans-serif" font-size="12" font-weight="500" fill="#109981">+23% this month</text>
+
+<rect x="880" y="270" width="220" height="70" rx="6" fill="#F9FAFB"/>
+<text x="890" y="295" font-family="Inter, sans-serif" font-size="20" font-weight="700" fill="#111827">2,847</text>
+<text x="890" y="310" font-family="Inter, sans-serif" font-size="12" fill="#6B7B85">Active Listings</text>
+<text x="890" y="325" font-family="Inter, sans-serif" font-size="12" font-weight="500" fill="#3692F2">+156 today</text>
+</svg>

@@ -15,8 +15,18 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "LevrX - The Leverage Exchange",
-  description: "Leverage what you have to get what you want",
+  title: "LevrX — The Real Estate Exchange",
+  description: "Leverage what you have to get what you want. AI-matched real estate opportunities.",
+  openGraph: {
+    title: "LevrX — The Real Estate Exchange",
+    description: "Leverage what you have to get what you want. AI-matched real estate opportunities.",
+    images: ["/opengraph-image.png"],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/opengraph-image.png"],
+  },
 };
 
 export default function RootLayout({
