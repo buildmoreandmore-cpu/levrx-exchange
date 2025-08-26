@@ -3,28 +3,28 @@ import Link from "next/link";
 
 export default function Navbar() {
   return (
-    <header className="sticky top-0 bg-white z-50 shadow-sm">
+    <header className="sticky top-0 bg-white z-50 shadow-sm border-b border-gray-100">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <nav className="flex h-16 items-center justify-between">
           {/* Left - Logo */}
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
-              <span className="text-white font-bold text-base">L</span>
+            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
+              <span className="text-white font-bold text-sm">L</span>
             </div>
             <span className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">LevrX</span>
           </Link>
 
           {/* Right - Sign In & Get Started */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
             <Link
               href="/sign-in"
-              className="text-gray-600 hover:text-gray-900 font-medium transition-colors"
+              className="text-gray-600 hover:text-gray-900 font-medium transition-colors text-sm"
             >
               Sign In
             </Link>
             <Link
               href="/sign-up"
-              className="bg-blue-600 text-white px-4 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors"
+              className="bg-blue-600 text-white px-4 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors text-sm shadow-md hover:shadow-lg"
             >
               Get Started
             </Link>
