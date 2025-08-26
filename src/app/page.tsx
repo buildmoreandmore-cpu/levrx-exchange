@@ -1,6 +1,5 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { SignInButton, SignedIn, SignedOut } from '@clerk/nextjs'
 import Hero from '@/components/landing/Hero'
@@ -9,20 +8,6 @@ import FAQ, { faqData } from '@/components/landing/FAQ'
 import LeadCapture from '@/components/landing/LeadCapture'
 
 export default function Home() {
-  const [hasVideo, setHasVideo] = useState(false)
-  
-  useEffect(() => {
-    // Check if video exists
-    const checkVideo = async () => {
-      try {
-        const response = await fetch('/hero.mp4', { method: 'HEAD' })
-        setHasVideo(response.ok)
-      } catch {
-        setHasVideo(false)
-      }
-    }
-    checkVideo()
-  }, [])
 
   // JSON-LD Schema for FAQ
   const faqSchema = {
@@ -45,7 +30,7 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       
-      <div className="min-h-screen bg-white">
+      <main className="min-h-[75vh] bg-white">
         {/* Header */}
         <header className="relative z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -58,39 +43,30 @@ export default function Home() {
               </div>
               
               <div className="hidden md:flex items-center space-x-8">
-                <a href="#faq" className="text-gray-600 hover:text-gray-900 font-medium">FAQ</a>
-                <Link href="/demo" className="text-gray-600 hover:text-gray-900 font-medium">Demo</Link>
+                <a href="#how-it-works" className="text-gray-600 hover:text-gray-900 font-medium">How it works</a>
+                <a href="#pricing" className="text-gray-600 hover:text-gray-900 font-medium">Pricing</a>
               </div>
 
               <div>
-                <SignedOut>
-                  <SignInButton mode="modal">
-                    <button className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-6 py-2.5 rounded-lg font-semibold shadow-sm hover:shadow-md transition-all duration-200">
-                      Sign In
-                    </button>
-                  </SignInButton>
-                </SignedOut>
-                <SignedIn>
-                  <Link 
-                    href="/dashboard"
-                    className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-6 py-2.5 rounded-lg font-semibold shadow-sm hover:shadow-md transition-all duration-200"
-                  >
-                    Dashboard
-                  </Link>
-                </SignedIn>
+                <Link 
+                  href="/dashboard"
+                  className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-6 py-2.5 rounded-lg font-semibold shadow-sm hover:shadow-md transition-all duration-200"
+                >
+                  Dashboard
+                </Link>
               </div>
             </div>
           </div>
         </header>
 
         {/* Hero Section */}
-        <Hero hasVideo={hasVideo} />
+        <Hero />
 
         {/* Trade Grid Section */}
         <TradeGrid />
 
         {/* How It Works Section */}
-        <section className="py-24 bg-gray-50">
+        <section id="how-it-works" className="py-24 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-4xl font-bold text-gray-900 mb-4">How it works</h2>
@@ -132,7 +108,7 @@ export default function Home() {
         </section>
 
         {/* Pricing Section */}
-        <section className="py-24 bg-white">
+        <section id="pricing" className="py-24 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-4xl font-bold text-gray-900 mb-4">Simple, transparent pricing</h2>
@@ -355,7 +331,7 @@ export default function Home() {
 
         {/* Lead Capture Modal */}
         <LeadCapture />
-      </div>
+      </main>
     </>
   )
 }
