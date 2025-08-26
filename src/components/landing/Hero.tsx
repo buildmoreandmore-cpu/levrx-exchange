@@ -16,8 +16,13 @@ export default function Hero() {
           </h1>
 
           {/* Subheadline */}
-          <p className="mx-auto max-w-4xl text-lg sm:text-xl md:text-2xl text-gray-600 leading-relaxed mb-10">
+          <p className="mx-auto max-w-4xl text-lg sm:text-xl md:text-2xl text-gray-600 leading-relaxed mb-6">
             A marketplace where real estate assets and opportunities find each other, powered by AI.
+          </p>
+          
+          {/* Tagline */}
+          <p className="text-base sm:text-lg text-gray-500 mb-10">
+            Start small, grow your leverage
           </p>
 
           {/* CTA */}

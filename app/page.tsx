@@ -87,7 +87,7 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-4xl font-bold text-gray-900 mb-4">Simple, transparent pricing</h2>
-              <p className="text-xl text-gray-600">Start free, scale as you grow</p>
+              <p className="text-xl text-gray-600">Flexible plans that unlock more matches, listings, and deal flow as you expand.</p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8">
