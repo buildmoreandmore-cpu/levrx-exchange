@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { SignInButton, SignedIn, SignedOut } from '@clerk/nextjs'
+import Navbar from '@/components/layout/Navbar'
 import Hero from '@/components/landing/Hero'
 import TradeGrid from '@/components/landing/TradeGrid'
 import FAQ, { faqData } from '@/components/landing/FAQ'
@@ -30,35 +31,9 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       
-      <main className="min-h-[75vh] bg-white">
-        {/* Header */}
-        <header className="relative z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center py-4">
-              <div className="flex items-center space-x-3">
-                <div className="w-9 h-9 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">L</span>
-                </div>
-                <span className="text-2xl font-bold text-gray-900">LevrX</span>
-              </div>
-              
-              <div className="hidden md:flex items-center space-x-8">
-                <a href="#how-it-works" className="text-gray-600 hover:text-gray-900 font-medium">How it works</a>
-                <a href="#pricing" className="text-gray-600 hover:text-gray-900 font-medium">Pricing</a>
-              </div>
-
-              <div>
-                <Link 
-                  href="/dashboard"
-                  className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-6 py-2.5 rounded-lg font-semibold shadow-sm hover:shadow-md transition-all duration-200"
-                >
-                  Dashboard
-                </Link>
-              </div>
-            </div>
-          </div>
-        </header>
-
+      <Navbar />
+      
+      <main className="bg-white">
         {/* Hero Section */}
         <Hero />
 
