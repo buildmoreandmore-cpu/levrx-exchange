@@ -13,18 +13,8 @@ export default function Navbar() {
             <span className="text-xl font-bold text-gray-900">LevrX</span>
           </Link>
 
-          {/* Center - Navigation */}
-          <div className="hidden md:flex items-center gap-8">
-            <Link href="#features" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
-              Features
-            </Link>
-            <Link href="#pricing" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
-              Pricing
-            </Link>
-            <Link href="#about" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
-              About
-            </Link>
-          </div>
+          {/* Center - Empty */}
+          <div></div>
 
           {/* Right - CTA */}
           <div className="flex items-center gap-4">
@@ -35,10 +25,10 @@ export default function Navbar() {
               Sign in
             </Link>
             <Link
-              href="/dashboard"
+              href="/sign-up"
               className="inline-flex items-center px-5 py-2.5 bg-black text-white font-medium rounded-lg hover:bg-gray-800 transition-colors"
             >
-              Get Started
+              Sign up
             </Link>
           </div>
         </nav>
