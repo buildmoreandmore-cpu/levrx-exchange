@@ -24,11 +24,95 @@ export default function Home() {
     }))
   }
 
+  // JSON-LD Schema for Organization
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "LevrX",
+    "description": "AI-powered real estate exchange platform connecting properties, capital, and opportunities",
+    "url": "https://levrx-exchange.vercel.app",
+    "logo": "https://levrx-exchange.vercel.app/logo.png",
+    "sameAs": [
+      "https://twitter.com/levrx",
+      "https://linkedin.com/company/levrx"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "customer service",
+      "availableLanguage": "English"
+    }
+  }
+
+  // JSON-LD Schema for WebSite
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "LevrX",
+    "description": "Real estate exchange platform powered by AI matching",
+    "url": "https://levrx-exchange.vercel.app",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "https://levrx-exchange.vercel.app/search?q={search_term_string}"
+      },
+      "query-input": "required name=search_term_string"
+    }
+  }
+
+  // JSON-LD Schema for Service
+  const serviceSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "Real Estate Exchange Platform",
+    "description": "AI-powered marketplace for real estate opportunities, partnerships, and property trading",
+    "provider": {
+      "@type": "Organization",
+      "name": "LevrX"
+    },
+    "serviceType": "Real Estate Technology Platform",
+    "areaServed": "United States",
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Real Estate Services",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Property Matching",
+            "description": "AI-powered property and opportunity matching"
+          }
+        },
+        {
+          "@type": "Offer", 
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Real Estate Partnerships",
+            "description": "Connect with real estate partners and investors"
+          }
+        }
+      ]
+    }
+  }
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
       />
       
       <Navbar />
