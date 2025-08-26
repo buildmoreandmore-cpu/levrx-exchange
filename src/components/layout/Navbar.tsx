@@ -28,7 +28,7 @@ export default function Navbar() {
         : "bg-white/80 backdrop-blur-sm"
     }`}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <nav className="flex h-16 items-center justify-between">
+        <nav className="flex h-16 items-center justify-between relative">
           {/* Left - Logo */}
           <Link href="/" className="flex items-center gap-2.5 group">
             <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
@@ -65,7 +65,7 @@ export default function Navbar() {
           {/* Right - Dashboard Button */}
           <Link
             href="/dashboard"
-            className="inline-flex items-center px-6 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-lg hover:from-blue-700 hover:to-indigo-700 shadow-xl hover:shadow-2xl transition-all duration-200 text-sm z-[9999] relative border-2 border-blue-700 hover:border-blue-400"
+            className="inline-flex items-center px-4 sm:px-6 py-3 sm:py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-lg hover:from-blue-700 hover:to-indigo-700 shadow-xl hover:shadow-2xl transition-all duration-200 text-xs sm:text-sm z-[9999] relative border-2 border-blue-700 hover:border-blue-400 min-w-[90px] sm:min-w-[120px]"
           >
             Dashboard
           </Link>
