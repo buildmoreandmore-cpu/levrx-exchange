@@ -14,12 +14,18 @@ export default function Navbar() {
           </Link>
 
           {/* Navigation */}
-          <nav className="flex items-center space-x-8">
+          <nav className="flex items-center space-x-6">
             <Link 
               href="/sign-in" 
               className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
             >
               Sign In
+            </Link>
+            <Link
+              href="/dashboard"
+              className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
+            >
+              Dashboard
             </Link>
             <Link
               href="/sign-up"
