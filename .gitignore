@@ -36,3 +36,4 @@ yarn-error.log*
 next-env.d.ts
 
 /app/generated/prisma
+# Force deployment Tue Aug 26 16:24:19 EDT 2025
