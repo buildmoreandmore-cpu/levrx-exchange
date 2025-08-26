@@ -6,11 +6,11 @@ export default function Hero() {
       {/* Subtle bottom fade background */}
       <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-gray-50/50 to-transparent pointer-events-none" />
       
-      <div className="relative mx-auto max-w-6xl px-6 py-20 md:py-24">
+      <div className="relative mx-auto max-w-6xl px-6 py-20 md:py-24 w-full">
         <div className="text-center">
           {/* Live Marketplace Badge */}
-          <div className="mb-12 flex justify-center">
-            <div className="inline-flex items-center gap-2.5 rounded-full bg-indigo-50 border border-indigo-200/60 px-4 py-2 shadow-sm">
+          <div className="mb-8 md:mb-12 flex justify-center">
+            <div className="inline-flex items-center gap-2.5 rounded-full bg-indigo-50 border border-indigo-200/60 px-4 py-2.5 shadow-sm">
               {/* Activity/Heartbeat Icon */}
               <svg className="h-4 w-4 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 12h3l2-6 4 12 2-6h6" />
@@ -21,7 +21,7 @@ export default function Hero() {
           </div>
 
           {/* Headline */}
-          <h1 className="mb-6 md:mb-8 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-gray-900 leading-[1.1]">
+          <h1 className="mb-6 md:mb-8 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-gray-900 leading-[1.1] text-center max-w-4xl mx-auto">
             Leverage what you have to{" "}
             <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
               get what you want
@@ -29,7 +29,7 @@ export default function Hero() {
           </h1>
 
           {/* Subheadline */}
-          <p className="mx-auto mb-8 md:mb-12 max-w-3xl text-lg md:text-xl text-slate-500 leading-relaxed">
+          <p className="mx-auto mb-8 md:mb-12 max-w-3xl text-lg md:text-xl text-slate-500 leading-relaxed text-center">
             A marketplace where assets and opportunities find each other, powered by AI.
           </p>
 
