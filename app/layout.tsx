@@ -1,9 +1,11 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { GeistSans } from "geist/font/sans"
-import { GeistMono } from "geist/font/mono"
+import { Inter, Roboto_Mono } from "next/font/google"
 import { ClerkProvider } from '@clerk/nextjs'
 import "./globals.css"
+
+const inter = Inter({ subsets: ["latin"] })
+const robotoMono = Roboto_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "LevrX - The Leverage Exchange",
@@ -19,13 +21,12 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html lang="en" className={`${inter.className} ${robotoMono.className}`}>
         <head>
           <style>{`
 html {
-  font-family: ${GeistSans.style.fontFamily};
-  --font-sans: ${GeistSans.variable};
-  --font-mono: ${GeistMono.variable};
+  --font-sans: ${inter.style.fontFamily};
+  --font-mono: ${robotoMono.style.fontFamily};
 }
           `}</style>
         </head>
