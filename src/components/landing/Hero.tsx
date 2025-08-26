@@ -22,7 +22,7 @@ export default function Hero() {
       {/* Subtle bottom fade background */}
       <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-gray-50/50 to-transparent pointer-events-none" />
       
-      <div className="relative mx-auto max-w-6xl px-6 pt-24 pb-16 sm:pt-32 sm:pb-20">
+      <div className="relative mx-auto max-w-6xl px-6 pt-32 pb-16 sm:pt-40 sm:pb-20">
         <div className="text-center">
           {/* Live Badge */}
           <div className="mb-8 flex justify-center">
