@@ -2,11 +2,11 @@ import Link from "next/link";
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen w-full bg-white overflow-hidden">
+    <section className="relative min-h-screen w-full bg-white overflow-hidden flex items-center">
       {/* Subtle bottom fade background */}
       <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-gray-50/50 to-transparent pointer-events-none" />
       
-      <div className="relative mx-auto max-w-6xl px-6 pt-32 pb-16 md:pb-20 sm:pt-40">
+      <div className="relative mx-auto max-w-6xl px-6 py-20 md:py-24">
         <div className="text-center">
           {/* Live Marketplace Badge */}
           <div className="mb-12 flex justify-center">
@@ -21,7 +21,7 @@ export default function Hero() {
           </div>
 
           {/* Headline */}
-          <h1 className="mb-8 text-6xl md:text-7xl font-extrabold tracking-tight text-gray-900 leading-[1.1]">
+          <h1 className="mb-6 md:mb-8 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-gray-900 leading-[1.1]">
             Leverage what you have to{" "}
             <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
               get what you want
@@ -29,12 +29,12 @@ export default function Hero() {
           </h1>
 
           {/* Subheadline */}
-          <p className="mx-auto mb-12 md:mb-16 max-w-3xl text-lg md:text-xl text-slate-500 leading-relaxed">
+          <p className="mx-auto mb-8 md:mb-12 max-w-3xl text-lg md:text-xl text-slate-500 leading-relaxed">
             A marketplace where assets and opportunities find each other, powered by AI.
           </p>
 
           {/* CTA Row - Three Buttons */}
-          <div className="mt-8 md:mt-12">
+          <div>
             <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
               {/* Google Sign-up Button */}
               <button 
