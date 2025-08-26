@@ -2,26 +2,26 @@ import Link from "next/link";
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen w-full bg-white overflow-hidden flex items-center">
+    <section className="relative min-h-screen w-full bg-white overflow-hidden flex items-center justify-center">
       {/* Subtle bottom fade background */}
       <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-gray-50/50 to-transparent pointer-events-none" />
       
-      <div className="relative mx-auto max-w-6xl px-6 py-20 md:py-24 w-full">
+      <div className="relative mx-auto max-w-6xl px-4 sm:px-6 py-20 md:py-24 w-full">
         <div className="text-center">
           {/* Live Marketplace Badge */}
-          <div className="mb-8 md:mb-12 flex justify-center">
-            <div className="inline-flex items-center gap-2.5 rounded-full bg-indigo-50 border border-indigo-200/60 px-4 py-2.5 shadow-sm">
+          <div className="mb-8 md:mb-12 flex justify-center w-full">
+            <div className="inline-flex items-center gap-2.5 rounded-full bg-indigo-50 border border-indigo-200/60 px-4 py-2.5 shadow-sm mx-auto">
               {/* Activity/Heartbeat Icon */}
-              <svg className="h-4 w-4 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <svg className="h-4 w-4 text-blue-700 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 12h3l2-6 4 12 2-6h6" />
               </svg>
-              <span className="text-sm font-semibold text-blue-700">Live Marketplace</span>
-              <div className="h-1.5 w-1.5 rounded-full bg-blue-500"></div>
+              <span className="text-sm font-semibold text-blue-700 whitespace-nowrap">Live Marketplace</span>
+              <div className="h-1.5 w-1.5 rounded-full bg-blue-500 flex-shrink-0"></div>
             </div>
           </div>
 
           {/* Headline */}
-          <h1 className="mb-6 md:mb-8 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-gray-900 leading-[1.1] text-center max-w-4xl mx-auto">
+          <h1 className="mb-6 md:mb-8 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight text-gray-900 leading-[1.1] text-center max-w-5xl mx-auto px-2">
             Leverage what you have to{" "}
             <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
               get what you want
@@ -35,10 +35,10 @@ export default function Hero() {
 
           {/* CTA Row - Three Buttons */}
           <div>
-            <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center max-w-4xl mx-auto">
               {/* Google Sign-up Button */}
               <button 
-                className="inline-flex h-14 w-full md:w-auto items-center justify-center gap-3 rounded-lg bg-blue-600 px-8 py-4 text-base font-semibold text-white shadow-md transition-all duration-200 hover:bg-blue-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className="inline-flex h-12 sm:h-14 w-full sm:w-auto items-center justify-center gap-2 sm:gap-3 rounded-lg bg-blue-600 px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base font-semibold text-white shadow-md transition-all duration-200 hover:bg-blue-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 aria-label="Sign up with Google"
               >
                 {/* Google Icon */}
@@ -53,7 +53,7 @@ export default function Hero() {
 
               {/* Apple Sign-up Button */}
               <button 
-                className="inline-flex h-14 w-full md:w-auto items-center justify-center gap-3 rounded-lg border border-gray-200 bg-white px-8 py-4 text-base font-semibold text-gray-900 shadow-md transition-all duration-200 hover:border-gray-300 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                className="inline-flex h-12 sm:h-14 w-full sm:w-auto items-center justify-center gap-2 sm:gap-3 rounded-lg border border-gray-200 bg-white px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base font-semibold text-gray-900 shadow-md transition-all duration-200 hover:border-gray-300 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                 aria-label="Sign up with Apple"
               >
                 {/* Apple Icon */}
@@ -66,7 +66,7 @@ export default function Hero() {
               {/* Email Sign-up Button */}
               <Link 
                 href="/sign-up"
-                className="inline-flex h-14 w-full md:w-auto items-center justify-center gap-3 rounded-lg border border-gray-200 bg-white px-8 py-4 text-base font-semibold text-gray-900 shadow-md transition-all duration-200 hover:border-gray-300 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                className="inline-flex h-12 sm:h-14 w-full sm:w-auto items-center justify-center gap-2 sm:gap-3 rounded-lg border border-gray-200 bg-white px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base font-semibold text-gray-900 shadow-md transition-all duration-200 hover:border-gray-300 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
               >
                 Sign up with Email
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
