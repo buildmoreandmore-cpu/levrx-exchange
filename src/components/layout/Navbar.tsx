@@ -22,7 +22,7 @@ export default function Navbar() {
   };
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+    <header className={`fixed top-0 left-0 right-0 z-[9999] transition-all duration-300 ${
       isScrolled 
         ? "bg-white/95 backdrop-blur-md border-b border-gray-200/50 shadow-sm" 
         : "bg-white/80 backdrop-blur-sm"
@@ -65,7 +65,7 @@ export default function Navbar() {
           {/* Right - Dashboard Button */}
           <Link
             href="/dashboard"
-            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-200 text-sm z-50 relative border border-transparent hover:border-blue-300"
+            className="inline-flex items-center px-6 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-lg hover:from-blue-700 hover:to-indigo-700 shadow-xl hover:shadow-2xl transition-all duration-200 text-sm z-[9999] relative border-2 border-blue-700 hover:border-blue-400"
           >
             Dashboard
           </Link>
