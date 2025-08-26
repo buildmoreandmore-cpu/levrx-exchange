@@ -6,7 +6,7 @@ export default function Hero() {
       {/* Subtle bottom fade background */}
       <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-gray-50/50 to-transparent pointer-events-none" />
       
-      <div className="relative mx-auto max-w-6xl px-6 pt-32 pb-20 md:pb-28 sm:pt-40">
+      <div className="relative mx-auto max-w-6xl px-6 pt-32 pb-16 md:pb-20 sm:pt-40">
         <div className="text-center">
           {/* Live Marketplace Badge */}
           <div className="mb-12 flex justify-center">

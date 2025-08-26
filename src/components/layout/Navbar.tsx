@@ -65,7 +65,7 @@ export default function Navbar() {
           {/* Right - Dashboard Button */}
           <Link
             href="/dashboard"
-            className="inline-flex items-center px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-indigo-700 shadow-sm hover:shadow-lg transition-all duration-200 text-sm"
+            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-200 text-sm z-50 relative border border-transparent hover:border-blue-300"
           >
             Dashboard
           </Link>
