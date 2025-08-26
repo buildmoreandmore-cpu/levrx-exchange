@@ -52,79 +52,13 @@ export default function Hero() {
             </button>
           </div>
           
-          <div className="mb-16">
+          <div className="mb-12">
             <Link
               href="/sign-up"
               className="inline-flex items-center rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 px-8 py-4 text-lg font-bold text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200"
             >
               Continue with Email
             </Link>
-          </div>
-
-          {/* Dashboard Mockup */}
-          <div className="relative max-w-5xl mx-auto">
-            <div className="group relative bg-white rounded-2xl shadow-2xl border border-gray-200/50 hover:scale-[1.02] transition-transform duration-500 overflow-hidden">
-              {/* Mockup Header */}
-              <div className="flex items-center gap-2 px-6 py-4 bg-gray-50 border-b border-gray-200">
-                <div className="flex gap-2">
-                  <div className="w-3 h-3 bg-red-400 rounded-full" />
-                  <div className="w-3 h-3 bg-yellow-400 rounded-full" />
-                  <div className="w-3 h-3 bg-green-400 rounded-full" />
-                </div>
-                <div className="flex-1 text-center">
-                  <div className="w-48 h-6 bg-gray-200 rounded-full mx-auto" />
-                </div>
-              </div>
-              
-              {/* Mockup Content */}
-              <div className="p-8 space-y-6">
-                {/* Top Row - Stats */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="bg-blue-50 rounded-xl p-6">
-                    <div className="w-16 h-4 bg-blue-200 rounded mb-3" />
-                    <div className="w-24 h-8 bg-blue-300 rounded" />
-                  </div>
-                  <div className="bg-green-50 rounded-xl p-6">
-                    <div className="w-20 h-4 bg-green-200 rounded mb-3" />
-                    <div className="w-28 h-8 bg-green-300 rounded" />
-                  </div>
-                  <div className="bg-purple-50 rounded-xl p-6">
-                    <div className="w-18 h-4 bg-purple-200 rounded mb-3" />
-                    <div className="w-32 h-8 bg-purple-300 rounded" />
-                  </div>
-                </div>
-                
-                {/* Main Content Area */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {/* Left Column - Chart */}
-                  <div className="bg-gray-50 rounded-xl p-6 space-y-4">
-                    <div className="w-32 h-5 bg-gray-300 rounded" />
-                    <div className="h-40 bg-gradient-to-t from-gray-200 to-gray-100 rounded-lg relative overflow-hidden">
-                      <div className="absolute bottom-0 left-4 w-8 h-20 bg-blue-300 rounded-t" />
-                      <div className="absolute bottom-0 left-16 w-8 h-32 bg-blue-400 rounded-t" />
-                      <div className="absolute bottom-0 left-28 w-8 h-24 bg-blue-300 rounded-t" />
-                      <div className="absolute bottom-0 right-28 w-8 h-36 bg-green-400 rounded-t" />
-                      <div className="absolute bottom-0 right-16 w-8 h-28 bg-green-300 rounded-t" />
-                      <div className="absolute bottom-0 right-4 w-8 h-32 bg-green-400 rounded-t" />
-                    </div>
-                  </div>
-                  
-                  {/* Right Column - List */}
-                  <div className="space-y-4">
-                    {[1, 2, 3, 4].map((i) => (
-                      <div key={i} className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-xl">
-                        <div className="w-12 h-12 bg-gray-200 rounded-lg" />
-                        <div className="flex-1 space-y-2">
-                          <div className="w-32 h-4 bg-gray-300 rounded" />
-                          <div className="w-48 h-3 bg-gray-200 rounded" />
-                        </div>
-                        <div className="w-16 h-6 bg-green-100 rounded-full" />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
 
           {/* Trust strip */}
