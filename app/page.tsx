@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { SignInButton, SignedIn, SignedOut } from '@clerk/nextjs'
 import Navbar from '@/components/layout/Navbar'
+import Footer from '@/components/layout/Footer'
 import Hero from '@/components/landing/Hero'
 import TradeGrid from '@/components/landing/TradeGrid'
 import FAQ, { faqData } from '@/components/landing/FAQ'
@@ -338,59 +339,11 @@ export default function Home() {
           <FAQ />
         </div>
 
-        {/* Footer */}
-        <footer className="bg-gray-900 text-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div className="grid md:grid-cols-4 gap-8">
-              <div className="md:col-span-1">
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-9 h-9 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center">
-                    <span className="text-white font-bold text-lg">L</span>
-                  </div>
-                  <span className="text-2xl font-bold">LevrX</span>
-                </div>
-                <p className="text-gray-400">The real estate exchange where assets and opportunities find each other.</p>
-              </div>
-              
-              <div>
-                <h4 className="text-lg font-semibold mb-4">Company</h4>
-                <ul className="space-y-2">
-                  <li><a href="#" className="text-gray-400 hover:text-white transition-colors">About</a></li>
-                  <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Contact</a></li>
-                  <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Careers</a></li>
-                </ul>
-              </div>
-              
-              <div>
-                <h4 className="text-lg font-semibold mb-4">Legal</h4>
-                <ul className="space-y-2">
-                  <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</a></li>
-                  <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Terms of Service</a></li>
-                  <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Cookie Policy</a></li>
-                </ul>
-              </div>
-              
-              <div>
-                <h4 className="text-lg font-semibold mb-4">Support</h4>
-                <ul className="space-y-2">
-                  <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Help Center</a></li>
-                  <li><a href="#" className="text-gray-400 hover:text-white transition-colors">API Docs</a></li>
-                  <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Status</a></li>
-                </ul>
-              </div>
-            </div>
-            
-            <div className="border-t border-gray-800 mt-12 pt-8 text-center">
-              <p className="text-gray-400 text-sm">
-                Copyright © 2025 LevrX. All rights reserved.
-              </p>
-            </div>
-          </div>
-        </footer>
-
         {/* Lead Capture Modal */}
         <LeadCapture />
       </main>
+      
+      <Footer />
     </>
   )
 }
