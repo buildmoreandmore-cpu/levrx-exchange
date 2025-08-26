@@ -8,9 +8,14 @@ export default function Hero() {
         <div className="text-center">
           {/* Status pill */}
           <div className="flex justify-center mb-8">
-            <span className="inline-flex items-center gap-2 rounded-full bg-green-100/70 px-4 py-2 text-sm font-medium text-green-700 ring-1 ring-inset ring-green-200">
-              <span className="inline-block h-2 w-2 rounded-full bg-green-500" />
+            <span className="inline-flex items-center gap-3 rounded-full bg-blue-50/80 px-5 py-2.5 text-sm font-medium text-blue-700 ring-1 ring-inset ring-blue-200">
+              {/* Heartbeat line icon */}
+              <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12h3l2-6 4 12 2-6h6" />
+              </svg>
               Live Marketplace
+              {/* Blue status dot */}
+              <span className="inline-block h-2 w-2 rounded-full bg-blue-500" />
             </span>
           </div>
 
