@@ -41,14 +41,14 @@ export default function Navbar() {
               <Link href="#how-it-works" className="hover:text-slate-900">How it works</Link>
               <Link href="#pricing" className="hover:text-slate-900">Pricing</Link>
               {/* Status pill */}
-              <span className="hidden lg:inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-sm font-medium text-indigo-700">
-                <svg width="16" height="16" viewBox="0 0 24 24" className="text-indigo-600" fill="none" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12h3l2-6 4 12 2-6h6" />
+              <span className="hidden lg:inline-flex items-center gap-2.5 rounded-full bg-gradient-to-r from-emerald-50 to-green-50 border border-emerald-200/60 px-3.5 py-1.5 text-sm font-medium text-emerald-700 shadow-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" className="text-emerald-600" fill="none" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 12h3l2-6 4 12 2-6h6" />
                 </svg>
-                Live Marketplace
-                <span className="relative inline-flex h-2.5 w-2.5">
-                  <span className="absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75 animate-ping" />
-                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-indigo-600" />
+                <span className="font-semibold">Live Marketplace</span>
+                <span className="relative inline-flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 animate-ping" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500 shadow-sm" />
                 </span>
               </span>
             </div>
