@@ -64,12 +64,23 @@ export default function ListingsPage() {
               Browse marketplace opportunities and partnerships
             </p>
           </div>
-          <Link
-            href="/listings/new"
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-          >
-            Create Listing
-          </Link>
+          <div className="flex space-x-3">
+            <Link
+              href="/matches"
+              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center"
+            >
+              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              View Matches
+            </Link>
+            <Link
+              href="/listings/new"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+            >
+              Create Listing
+            </Link>
+          </div>
         </div>
 
         {/* Stats */}
