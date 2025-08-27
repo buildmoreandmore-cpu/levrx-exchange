@@ -65,7 +65,7 @@ export default function ListingsPage() {
             </p>
           </div>
           <Link
-            href="/dashboard"
+            href="/listings/new"
             className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
           >
             Create Listing
@@ -140,7 +140,7 @@ export default function ListingsPage() {
               }
             </p>
             <Link
-              href="/dashboard"
+              href="/listings/new"
               className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-medium transition-colors inline-flex items-center"
             >
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -172,30 +172,46 @@ export default function ListingsPage() {
                   </button>
                 </div>
 
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">{listing.title}</h3>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                  {listing.packageType} in {listing.city}, {listing.state}
+                </h3>
                 
-                <p className="text-gray-600 mb-4 line-clamp-2">{listing.description}</p>
+                <p className="text-gray-600 mb-4 line-clamp-2">
+                  {listing.propertyType} • {listing.notes || 'No additional notes'}
+                </p>
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-6">
                     <div>
-                      <span className="text-sm text-gray-500">Category:</span>
-                      <span className="ml-1 text-sm font-medium">{listing.category}</span>
+                      <span className="text-sm text-gray-500">Type:</span>
+                      <span className="ml-1 text-sm font-medium">{listing.propertyType}</span>
                     </div>
-                    {listing.value && (
+                    {listing.price && (
                       <div>
-                        <span className="text-sm text-gray-500">
-                          {listing.kind === 'HAVE' ? 'Est. Value' : 'Target'}:
-                        </span>
+                        <span className="text-sm text-gray-500">Price:</span>
                         <span className="ml-1 text-sm font-medium">
-                          ${listing.value.toLocaleString()}
+                          ${listing.price.toLocaleString()}
+                        </span>
+                      </div>
+                    )}
+                    {listing.noiAnnual && (
+                      <div>
+                        <span className="text-sm text-gray-500">NOI:</span>
+                        <span className="ml-1 text-sm font-medium">
+                          ${listing.noiAnnual.toLocaleString()}/yr
                         </span>
                       </div>
                     )}
                   </div>
                   <div className="text-right">
-                    <div className="text-sm text-gray-500">Listed by</div>
-                    <div className="text-sm font-medium">{listing.owner?.name || 'Anonymous'}</div>
+                    <div className="text-sm text-gray-500">Urgency</div>
+                    <div className={`text-sm font-medium px-2 py-1 rounded-full ${
+                      listing.sellerUrgency === 'High' ? 'bg-red-100 text-red-800' :
+                      listing.sellerUrgency === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
+                      'bg-green-100 text-green-800'
+                    }`}>
+                      {listing.sellerUrgency || 'Low'}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -204,23 +220,22 @@ export default function ListingsPage() {
         )}
 
         {/* Demo Notice */}
-        {listings.some(l => l.id.startsWith('mock-')) && (
-          <div className="mt-12 bg-blue-50 border border-blue-200 rounded-lg p-6">
-            <div className="flex items-start">
-              <div className="flex-shrink-0">
-                <svg className="w-5 h-5 text-blue-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <h3 className="text-sm font-medium text-blue-800">Sample Data Included</h3>
-                <p className="mt-1 text-sm text-blue-700">
-                  Some listings shown are sample data for demonstration. Your created listings are stored locally and will persist across sessions.
-                </p>
-              </div>
+        <div className="mt-12 bg-blue-50 border border-blue-200 rounded-lg p-6">
+          <div className="flex items-start">
+            <div className="flex-shrink-0">
+              <svg className="w-5 h-5 text-blue-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-blue-800">Sample Data Included</h3>
+              <p className="mt-1 text-sm text-blue-700">
+                Some listings shown are sample data for demonstration. Your created listings are stored locally and will persist across sessions.
+                <Link href="/listings/new" className="font-medium underline ml-1">Create your own listing</Link> to get started with real partnerships.
+              </p>
             </div>
           </div>
-        )}
+        </div>
       </div>
     </div>
   )
