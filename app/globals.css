@@ -3,13 +3,34 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  body {
+    font-family: inherit;
+  }
+  
   h1 {
     @apply text-5xl font-extrabold leading-tight;
+    font-family: inherit;
   }
   h2 {
     @apply text-3xl font-bold;
+    font-family: inherit;
+  }
+  h3 {
+    @apply text-xl font-semibold;
+    font-family: inherit;
   }
   p {
     @apply text-lg text-gray-500;
+    font-family: inherit;
+  }
+  
+  * {
+    font-family: inherit;
   }
 }
