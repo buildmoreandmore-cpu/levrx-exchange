@@ -2,6 +2,66 @@ import { NextRequest, NextResponse } from 'next/server'
 import { currentUser } from '@clerk/nextjs/server'
 import { prisma } from '@/lib/db'
 import { anthropic, buildMatchRationalePrompt, buildDealStructuresPrompt } from '@/lib/anthropic'
+import { mockHaves, mockWants } from '@/lib/mockListings'
+
+// Demo match for development
+const demoMatch = {
+  id: 'demo-match-1',
+  score: 0.85,
+  rationale: `This is a high-quality match for several key reasons:
+
+**Geographic Synergy**: The Atlanta multifamily property owner needs to complete a 1031 exchange within 60 days, while the Charlotte buyer is actively seeking assumable financing opportunities in the Southeast corridor.
+
+**Complementary Needs**: The Have listing offers assumable financing ($1.2M debt) and strong cash flow ($165K NOI), which directly addresses the Want listing's need for "debt relief/assume debt" and "creative financing" solutions.
+
+**Timeline Alignment**: The seller's high urgency (60-day 1031 deadline) matches well with a buyer who appears ready to move quickly on the right opportunity.
+
+**Value-Add Opportunity**: The below-market basis and value-add upside mentioned could provide the equity growth the Charlotte investor is seeking.`,
+  suggestedStructures: [
+    {
+      title: "Assumption + Partner Structure",
+      description: "Charlotte buyer assumes $1.2M debt, Atlanta seller provides seller financing for remaining equity, creating partnership opportunity"
+    },
+    {
+      title: "1031 Exchange Facilitation", 
+      description: "Structure as qualified intermediary transaction to meet seller's 1031 timeline requirements"
+    }
+  ],
+  createdAt: new Date().toISOString(),
+  listingA: {
+    id: mockHaves[0].id,
+    title: `${mockHaves[0].propertyType} Investment Opportunity`,
+    mode: mockHaves[0].kind,
+    user: { name: 'Atlanta Investor' },
+    asset: { 
+      title: `${mockHaves[0].propertyType} - ${mockHaves[0].city}, ${mockHaves[0].state}`,
+      type: mockHaves[0].packageType 
+    }
+  },
+  listingB: {
+    id: mockWants[0].id,
+    title: `Seeking ${mockWants[0].propertyType} Opportunity`,
+    mode: mockWants[0].kind,
+    user: { name: 'Charlotte Buyer' },
+    want: { 
+      title: `${mockWants[0].propertyType} - ${mockWants[0].city}, ${mockWants[0].state}`,
+      category: mockWants[0].packageType 
+    }
+  }
+}
+
+export async function GET() {
+  try {
+    // For demo purposes, return the demo match without authentication
+    return NextResponse.json([demoMatch])
+  } catch (error) {
+    console.error('Error fetching matches:', error)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
