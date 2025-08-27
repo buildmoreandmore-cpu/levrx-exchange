@@ -68,32 +68,84 @@ export default function DemoData() {
         </div>
 
         {/* Action Buttons */}
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Link 
             href="/demo/listings"
-            className="bg-indigo-600 hover:bg-indigo-700 text-white p-8 rounded-lg text-center transition-colors block"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white p-6 rounded-lg text-center transition-colors block"
           >
             <div className="mb-4">
-              <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold mb-2">Browse Sample Listings</h3>
-            <p>Explore example "Have" and "Want" listings</p>
+            <h3 className="text-lg font-semibold mb-2">Browse Listings</h3>
+            <p className="text-sm">View all marketplace listings</p>
+          </Link>
+
+          <Link 
+            href="/demo/create"
+            className="bg-blue-600 hover:bg-blue-700 text-white p-6 rounded-lg text-center transition-colors block"
+          >
+            <div className="mb-4">
+              <svg className="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold mb-2">Create Listing</h3>
+            <p className="text-sm">Add a new Have/Want listing</p>
           </Link>
 
           <Link 
             href="/demo/matches"
-            className="bg-green-600 hover:bg-green-700 text-white p-8 rounded-lg text-center transition-colors block"
+            className="bg-green-600 hover:bg-green-700 text-white p-6 rounded-lg text-center transition-colors block"
           >
             <div className="mb-4">
-              <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold mb-2">View AI Matches</h3>
-            <p>See how the AI matching algorithm works</p>
+            <h3 className="text-lg font-semibold mb-2">View Matches</h3>
+            <p className="text-sm">See AI-generated matches</p>
           </Link>
+
+          <Link 
+            href="/demo/discussions"
+            className="bg-purple-600 hover:bg-purple-700 text-white p-6 rounded-lg text-center transition-colors block"
+          >
+            <div className="mb-4">
+              <svg className="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold mb-2">Discussions</h3>
+            <p className="text-sm">Chat with potential partners</p>
+          </Link>
+        </div>
+
+        {/* Additional Actions */}
+        <div className="grid md:grid-cols-2 gap-6 mb-8">
+          <Link 
+            href="/demo/agreements"
+            className="bg-orange-600 hover:bg-orange-700 text-white p-6 rounded-lg text-center transition-colors block"
+          >
+            <div className="mb-4">
+              <svg className="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold mb-2">Agreements</h3>
+            <p className="text-sm">Manage partnership agreements</p>
+          </Link>
+
+          <div className="bg-gray-100 p-6 rounded-lg text-center">
+            <div className="mb-4">
+              <svg className="w-10 h-10 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold mb-2 text-gray-700">Full Platform</h3>
+            <p className="text-sm text-gray-600">Configure APIs for complete functionality</p>
+          </div>
         </div>
 
         {/* Sample Data Preview */}
