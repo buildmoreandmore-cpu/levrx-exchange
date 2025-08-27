@@ -49,13 +49,13 @@ export default function Navbar() {
             // Not logged in
             <>
               <Link 
-                href="/auth/signin" 
+                href="/sign-in" 
                 className="text-gray-700 hover:text-gray-900 font-medium transition-colors text-sm lg:text-base"
               >
                 Sign In
               </Link>
               <Link
-                href="/auth/register"
+                href="/sign-up"
                 className="bg-blue-600 text-white px-3 lg:px-4 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors text-sm lg:text-base"
               >
                 Get Started
@@ -199,14 +199,14 @@ export default function Navbar() {
             {!isSignedIn ? (
               <>
                 <Link 
-                  href="/auth/signin" 
+                  href="/sign-in" 
                   className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Sign In
                 </Link>
                 <Link
-                  href="/auth/register"
+                  href="/sign-up"
                   className="block px-3 py-2 text-base font-medium bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-center mt-3"
                   onClick={() => setMobileMenuOpen(false)}
                 >
