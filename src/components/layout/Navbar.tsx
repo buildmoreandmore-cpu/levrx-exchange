@@ -16,6 +16,12 @@ export default function Navbar() {
           {/* Navigation */}
           <nav className="flex items-center space-x-6">
             <Link 
+              href="/listings" 
+              className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
+            >
+              Browse Listings
+            </Link>
+            <Link 
               href="/sign-in" 
               className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
             >
