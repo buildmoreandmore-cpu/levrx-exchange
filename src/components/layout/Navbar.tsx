@@ -44,6 +44,12 @@ export default function Navbar() {
           >
             Browse Listings
           </Link>
+          <Link 
+            href="/pricing" 
+            className="text-gray-700 hover:text-gray-900 font-medium transition-colors text-sm lg:text-base"
+          >
+            Pricing
+          </Link>
           
           {!isSignedIn ? (
             // Not logged in
@@ -194,6 +200,13 @@ export default function Navbar() {
               onClick={() => setMobileMenuOpen(false)}
             >
               Browse Listings
+            </Link>
+            <Link 
+              href="/pricing" 
+              className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Pricing
             </Link>
             
             {!isSignedIn ? (
