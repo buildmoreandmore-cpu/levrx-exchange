@@ -14,7 +14,7 @@ if (!STRIPE_WEBHOOK_SECRET) {
   throw new Error('STRIPE_WEBHOOK_SECRET environment variable is required')
 }
 
-// Initialize Stripe instance - TypeScript knows this is never null
+// Initialize Stripe instance - TypeScript knows this is never null after validation
 const stripe = new Stripe(STRIPE_SECRET_KEY, {
   apiVersion: '2024-06-20',
   typescript: true,
