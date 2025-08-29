@@ -2,48 +2,46 @@ import { NextRequest, NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import Stripe from 'stripe'
 
-// Initialize Stripe with proper error handling - never allow null
-if (!process.env.STRIPE_SECRET_KEY) {
+// Validate environment variables at module load time
+const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY
+const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET
+
+if (!STRIPE_SECRET_KEY) {
   throw new Error('STRIPE_SECRET_KEY environment variable is required')
 }
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+if (!STRIPE_WEBHOOK_SECRET) {
+  throw new Error('STRIPE_WEBHOOK_SECRET environment variable is required')
+}
+
+// Initialize Stripe instance - TypeScript knows this is never null
+const stripe = new Stripe(STRIPE_SECRET_KEY, {
   apiVersion: '2024-06-20',
   typescript: true,
 })
 
-const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET
-
 export async function POST(req: NextRequest) {
-  // Verify webhook secret is configured
-  if (!endpointSecret) {
-    console.error('STRIPE_WEBHOOK_SECRET is not configured')
-    return NextResponse.json(
-      { error: 'Webhook secret not configured' },
-      { status: 500 }
-    )
-  }
-
   try {
-    // Get the raw body as text (required for signature verification)
+    // Get raw body text for signature verification
     const body = await req.text()
     
-    // Get the Stripe signature from headers
+    // Get Stripe signature from headers
     const headersList = await headers()
     const signature = headersList.get('stripe-signature')
 
     if (!signature) {
-      console.error('Missing stripe-signature header')
+      console.error('❌ Missing stripe-signature header')
       return NextResponse.json(
         { error: 'Missing stripe-signature header' },
         { status: 400 }
       )
     }
 
-    // Verify the webhook signature and construct the event
+    // Verify webhook signature and construct event
     let event: Stripe.Event
     try {
-      event = stripe.webhooks.constructEvent(body, signature, endpointSecret)
+      // stripe is guaranteed to be non-null here
+      event = stripe.webhooks.constructEvent(body, signature, STRIPE_WEBHOOK_SECRET)
       console.log('✅ Webhook signature verified:', event.type)
     } catch (err) {
       console.error('❌ Webhook signature verification failed:', err)
@@ -53,69 +51,53 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Handle the event
+    // Handle different event types
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session
-        console.log('💰 Payment successful:', session.id)
+        console.log('💰 Payment completed for session:', session.id)
         
-        // TODO: Handle successful payment
-        // - Update user subscription status
-        // - Send confirmation email
-        // - Log the transaction
+        // TODO: Update user subscription in database
+        // const { client_reference_id, customer, subscription } = session
+        // await updateUserSubscription(client_reference_id, subscription)
         
+        break
+      }
+
+      case 'customer.subscription.created': {
+        const subscription = event.data.object as Stripe.Subscription
+        console.log('🆕 New subscription created:', subscription.id)
         break
       }
 
       case 'customer.subscription.updated': {
         const subscription = event.data.object as Stripe.Subscription
         console.log('🔄 Subscription updated:', subscription.id)
-        
-        // TODO: Handle subscription changes
-        // - Update user subscription status in database
-        // - Handle plan changes, cancellations, etc.
-        
         break
       }
 
       case 'customer.subscription.deleted': {
         const subscription = event.data.object as Stripe.Subscription
         console.log('❌ Subscription cancelled:', subscription.id)
-        
-        // TODO: Handle subscription cancellation
-        // - Update user access level
-        // - Send cancellation email
-        
         break
       }
 
       case 'invoice.payment_succeeded': {
         const invoice = event.data.object as Stripe.Invoice
-        console.log('💳 Invoice payment succeeded:', invoice.id)
-        
-        // TODO: Handle successful recurring payment
-        // - Extend subscription period
-        // - Send receipt
-        
+        console.log('💳 Payment succeeded for invoice:', invoice.id)
         break
       }
 
       case 'invoice.payment_failed': {
         const invoice = event.data.object as Stripe.Invoice
-        console.log('❌ Invoice payment failed:', invoice.id)
-        
-        // TODO: Handle failed payment
-        // - Notify user of failed payment
-        // - Implement retry logic
-        
+        console.log('❌ Payment failed for invoice:', invoice.id)
         break
       }
 
       default:
-        console.log(`Unhandled event type: ${event.type}`)
+        console.log(`ℹ️ Unhandled event type: ${event.type}`)
     }
 
-    // Return success response
     return NextResponse.json({ received: true })
 
   } catch (error) {
