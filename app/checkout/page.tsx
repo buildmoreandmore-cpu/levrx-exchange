@@ -1,10 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense, useCallback } from 'react'
 import { useUser } from '@clerk/nextjs'
 import { useRouter, useSearchParams } from 'next/navigation'
 
-export default function CheckoutPage() {
+function CheckoutPageContent() {
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState('')
   const { isSignedIn, isLoaded } = useUser()
@@ -13,17 +13,7 @@ export default function CheckoutPage() {
   
   const plan = searchParams.get('plan') || 'starter'
 
-  useEffect(() => {
-    if (isLoaded && isSignedIn && !loading) {
-      // Automatically trigger checkout when user is signed in
-      handleCheckout()
-    } else if (isLoaded && !isSignedIn) {
-      // Redirect to sign-up with plan parameter if not signed in
-      router.push(`/sign-up?plan=${plan}&redirect=checkout`)
-    }
-  }, [isLoaded, isSignedIn, plan, router])
-
-  const handleCheckout = async () => {
+  const handleCheckout = useCallback(async () => {
     setLoading(true)
     setResult('Creating checkout session...')
 
@@ -66,7 +56,17 @@ export default function CheckoutPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [plan])
+
+  useEffect(() => {
+    if (isLoaded && isSignedIn && !loading && !result) {
+      // Automatically trigger checkout when user is signed in
+      handleCheckout()
+    } else if (isLoaded && !isSignedIn) {
+      // Redirect to sign-up with plan parameter if not signed in
+      router.push(`/sign-up?plan=${plan}&redirect=checkout`)
+    }
+  }, [isLoaded, isSignedIn, plan, router, loading, result, handleCheckout])
 
   if (!isLoaded) {
     return (
@@ -104,5 +104,20 @@ export default function CheckoutPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <CheckoutPageContent />
+    </Suspense>
   )
 }

@@ -16,7 +16,7 @@ if (!STRIPE_WEBHOOK_SECRET) {
 
 // Initialize Stripe instance with correct API version
 const stripe = new Stripe(STRIPE_SECRET_KEY, {
-  apiVersion: '2023-10-16', // Use a stable, well-supported API version
+  apiVersion: '2025-08-27.basil', // Use a stable, well-supported API version
   typescript: true,
 })
 
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
     let event: Stripe.Event
     try {
       // stripe is guaranteed to be non-null here due to early validation
-      event = stripe.webhooks.constructEvent(body, signature, STRIPE_WEBHOOK_SECRET)
+      event = stripe.webhooks.constructEvent(body, signature, STRIPE_WEBHOOK_SECRET!)
       console.log('✅ Webhook signature verified:', event.type)
     } catch (err) {
       console.error('❌ Webhook signature verification failed:', err)
