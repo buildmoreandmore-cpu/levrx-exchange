@@ -29,14 +29,16 @@ export default function RootLayout({
     >
       <html lang="en" className={inter.className}>
         <head>
-          <style>{`
+          <style dangerouslySetInnerHTML={{
+            __html: `
 html {
   font-family: ${inter.style.fontFamily}, system-ui, -apple-system, sans-serif;
 }
 * {
   font-family: inherit;
 }
-          `}</style>
+            `
+          }} />
         </head>
         <body className={inter.className}>{children}</body>
       </html>
