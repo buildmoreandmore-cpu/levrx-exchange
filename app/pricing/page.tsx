@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useUser } from '@clerk/nextjs'
+import CheckoutButton from '@/components/pricing/CheckoutButton'
 
 export default function PricingPage() {
   const { user, isSignedIn } = useUser()
@@ -20,7 +21,7 @@ export default function PricingPage() {
         'Access to marketplace'
       ],
       popular: false,
-      cta: 'Start Free Trial'
+      cta: 'Get Started'
     },
     {
       name: 'Professional',
@@ -37,7 +38,7 @@ export default function PricingPage() {
         'API access'
       ],
       popular: true,
-      cta: 'Start Free Trial'
+      cta: 'Get Started'
     },
     {
       name: 'Enterprise',
@@ -147,16 +148,25 @@ export default function PricingPage() {
                 ))}
               </ul>
 
-              <Link
-                href={plan.name === 'Enterprise' ? '/contact' : '/sign-up'}
-                className={`block w-full text-center py-3 px-6 rounded-lg font-medium transition-colors ${
-                  plan.popular
-                    ? 'bg-blue-600 text-white hover:bg-blue-700'
-                    : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-                }`}
-              >
-                {plan.cta}
-              </Link>
+              {plan.name === 'Enterprise' ? (
+                <Link
+                  href="/contact"
+                  className="block w-full text-center py-3 px-6 rounded-lg font-medium transition-colors bg-gray-100 text-gray-900 hover:bg-gray-200"
+                >
+                  {plan.cta}
+                </Link>
+              ) : (
+                <CheckoutButton
+                  plan={plan.name.toLowerCase() as 'starter' | 'professional'}
+                  className={`block w-full text-center py-3 px-6 rounded-lg font-medium transition-colors ${
+                    plan.popular
+                      ? 'bg-blue-600 text-white hover:bg-blue-700'
+                      : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+                  }`}
+                >
+                  {plan.cta}
+                </CheckoutButton>
+              )}
             </div>
           ))}
         </div>
@@ -169,10 +179,10 @@ export default function PricingPage() {
           <div className="max-w-3xl mx-auto space-y-8">
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                What's included in the free trial?
+                How do I get started?
               </h3>
               <p className="text-gray-600">
-                All paid plans include a 14-day free trial with full access to all features. No credit card required to start.
+                Simply sign up for any plan and start using the platform immediately. Payment is processed monthly.
               </p>
             </div>
             <div>
