@@ -14,9 +14,9 @@ if (!STRIPE_WEBHOOK_SECRET) {
   throw new Error('STRIPE_WEBHOOK_SECRET environment variable is required')
 }
 
-// Initialize Stripe instance - TypeScript knows this is never null after validation
+// Initialize Stripe instance with correct API version
 const stripe = new Stripe(STRIPE_SECRET_KEY, {
-  apiVersion: '2024-06-20',
+  apiVersion: '2023-10-16', // Use a stable, well-supported API version
   typescript: true,
 })
 
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
     // Verify webhook signature and construct event
     let event: Stripe.Event
     try {
-      // stripe is guaranteed to be non-null here
+      // stripe is guaranteed to be non-null here due to early validation
       event = stripe.webhooks.constructEvent(body, signature, STRIPE_WEBHOOK_SECRET)
       console.log('✅ Webhook signature verified:', event.type)
     } catch (err) {
