@@ -4,6 +4,10 @@ import { stripe, PRICING_PLANS, PricingPlan } from '@/lib/stripe'
 
 export async function POST(req: NextRequest) {
   try {
+    if (!stripe) {
+      return NextResponse.json({ error: 'Stripe not configured' }, { status: 500 })
+    }
+    
     const { userId } = await auth()
     
     if (!userId) {

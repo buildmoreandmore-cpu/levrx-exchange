@@ -1,14 +1,23 @@
 import Stripe from 'stripe'
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('STRIPE_SECRET_KEY is not set')
+// Server-side Stripe instance (only runs on server)
+let stripe: Stripe | null = null
+
+if (typeof window === 'undefined') {
+  // Only initialize on server-side
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error('STRIPE_SECRET_KEY is not set')
+  }
+  
+  stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: '2024-06-20',
+    typescript: true,
+  })
 }
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2024-06-20',
-  typescript: true,
-})
+export { stripe }
 
+// Client-side Stripe.js loader
 export const getStripeJs = async () => {
   const { loadStripe } = await import('@stripe/stripe-js')
   
