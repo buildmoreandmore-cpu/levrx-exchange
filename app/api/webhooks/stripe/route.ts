@@ -6,6 +6,11 @@ import Stripe from 'stripe'
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET
 
 export async function POST(req: NextRequest) {
+  // Handle case where Stripe is not initialized
+  if (!stripe) {
+    return NextResponse.json({ error: 'Stripe not configured' }, { status: 500 })
+  }
+
   // Handle case where webhook secret is not set (development mode)
   if (!endpointSecret) {
     console.warn('STRIPE_WEBHOOK_SECRET is not set. Skipping signature verification.')
