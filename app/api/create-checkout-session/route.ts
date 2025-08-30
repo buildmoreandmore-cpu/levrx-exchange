@@ -45,20 +45,28 @@ export async function POST(req: NextRequest) {
             },
             unit_amount: planDetails.price!,
             recurring: {
-              interval: planDetails.interval as 'month',
+              interval: 'month',
             },
           },
           quantity: 1,
         },
       ],
       mode: 'subscription',
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://localhost:3000'}/dashboard?success=true&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://localhost:3000'}/pricing?canceled=true`,
+      success_url: `https://levrx-exchange.vercel.app/dashboard?success=true&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `https://levrx-exchange.vercel.app/pricing?canceled=true`,
+      customer_email: undefined, // Let Stripe collect email
+      allow_promotion_codes: true,
       metadata: {
-        userId,
-        plan,
+        userId: userId,
+        plan: plan,
       },
       client_reference_id: userId,
+      subscription_data: {
+        metadata: {
+          userId: userId,
+          plan: plan,
+        },
+      },
     })
 
     return NextResponse.json({ sessionId: session.id })
