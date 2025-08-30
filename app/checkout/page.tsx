@@ -108,6 +108,51 @@ function CheckoutPageContent() {
               </button>
             </div>
           )}
+          
+          {/* Stripe Legal Links */}
+          <div className="mt-8 pt-6 border-t border-gray-200">
+            <div className="text-center space-y-2">
+              <p className="text-sm text-gray-500">
+                Payment processing powered by{' '}
+                <a 
+                  href="https://stripe.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-800 underline"
+                >
+                  Stripe
+                </a>
+              </p>
+              <div className="flex justify-center items-center space-x-4 text-xs text-gray-400">
+                <a 
+                  href="https://stripe.com/docs/billing" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:text-gray-600 underline"
+                >
+                  Learn more about Stripe Billing
+                </a>
+                <span>•</span>
+                <a 
+                  href="https://stripe.com/legal/ssa" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:text-gray-600 underline"
+                >
+                  Terms
+                </a>
+                <span>•</span>
+                <a 
+                  href="https://stripe.com/privacy" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:text-gray-600 underline"
+                >
+                  Privacy
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
