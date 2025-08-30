@@ -31,6 +31,8 @@ export async function GET() {
     let subscription = null
     let paymentMethods: Stripe.PaymentMethod[] = []
     let invoices: Stripe.Invoice[] = []
+    let charges: Stripe.Charge[] = []
+    let upcomingInvoice: Stripe.Invoice | null = null
 
     // Try to find customer by searching through recent customers
     const allCustomers = await stripe.customers.list({ limit: 100 })
@@ -68,6 +70,24 @@ export async function GET() {
         limit: 10,
       })
       invoices = invoicesList.data
+
+      // Get recent charges (payment history)
+      const chargesList = await stripe.charges.list({
+        customer: customer.id,
+        limit: 10,
+      })
+      charges = chargesList.data
+
+      // Note: Upcoming invoice retrieval temporarily disabled due to API method changes
+      // if (subscription && subscription.status === 'active') {
+      //   try {
+      //     upcomingInvoice = await stripe.invoices.upcoming({
+      //       customer: customer.id,
+      //     })
+      //   } catch (e) {
+      //     console.log('No upcoming invoice found')
+      //   }
+      // }
     }
 
     return NextResponse.json({
@@ -85,35 +105,77 @@ export async function GET() {
         current_period_end: (subscription as any).current_period_end,
         cancel_at_period_end: (subscription as any).cancel_at_period_end,
         canceled_at: (subscription as any).canceled_at,
+        created: subscription.created,
+        trial_start: (subscription as any).trial_start,
+        trial_end: (subscription as any).trial_end,
+        latest_invoice: (subscription as any).latest_invoice,
+        collection_method: (subscription as any).collection_method,
         plan: {
           id: subscription.items.data[0]?.price.id,
           amount: subscription.items.data[0]?.price.unit_amount,
           currency: subscription.items.data[0]?.price.currency,
           interval: subscription.items.data[0]?.price.recurring?.interval,
+          interval_count: subscription.items.data[0]?.price.recurring?.interval_count,
           product: subscription.items.data[0]?.price.product,
         },
       } : null,
       paymentMethods: paymentMethods.map(pm => ({
         id: pm.id,
         type: pm.type,
+        created: pm.created,
         card: pm.card ? {
           brand: pm.card.brand,
           last4: pm.card.last4,
           exp_month: pm.card.exp_month,
           exp_year: pm.card.exp_year,
+          funding: pm.card.funding,
+          country: pm.card.country,
+          fingerprint: pm.card.fingerprint,
         } : null,
       })),
       invoices: invoices.map(invoice => ({
         id: invoice.id,
         amount_paid: invoice.amount_paid,
         amount_due: invoice.amount_due,
+        amount_total: invoice.amount_due, // Using amount_due as fallback
         currency: invoice.currency,
         status: invoice.status,
         created: invoice.created,
+        period_start: invoice.period_start,
+        period_end: invoice.period_end,
         invoice_pdf: invoice.invoice_pdf,
         hosted_invoice_url: invoice.hosted_invoice_url,
         number: invoice.number,
+        description: invoice.description,
+        subtotal: invoice.subtotal,
+        tax: null, // Tax info not available in basic invoice
+        total: invoice.total,
       })),
+      charges: charges.map(charge => ({
+        id: charge.id,
+        amount: charge.amount,
+        currency: charge.currency,
+        status: charge.status,
+        created: charge.created,
+        description: charge.description,
+        receipt_url: charge.receipt_url,
+        payment_method_details: charge.payment_method_details ? {
+          type: charge.payment_method_details.type,
+          card: charge.payment_method_details.card ? {
+            brand: charge.payment_method_details.card.brand,
+            last4: charge.payment_method_details.card.last4,
+            funding: charge.payment_method_details.card.funding,
+          } : null,
+        } : null,
+        outcome: charge.outcome ? {
+          network_status: charge.outcome.network_status,
+          reason: charge.outcome.reason,
+          risk_level: charge.outcome.risk_level,
+          seller_message: charge.outcome.seller_message,
+          type: charge.outcome.type,
+        } : null,
+      })),
+      upcomingInvoice: null, // Temporarily disabled
     })
 
   } catch (error) {

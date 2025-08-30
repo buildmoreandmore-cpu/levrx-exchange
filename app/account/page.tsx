@@ -12,32 +12,88 @@ interface Subscription {
   current_period_end: number
   cancel_at_period_end: boolean
   canceled_at: number | null
+  created: number
+  trial_start: number | null
+  trial_end: number | null
+  latest_invoice: string | null
+  collection_method: string
   plan: {
+    id: string
     amount: number
     currency: string
     interval: string
+    interval_count: number
+    product: string
   }
 }
 
 interface PaymentMethod {
   id: string
   type: string
+  created: number
   card: {
     brand: string
     last4: string
     exp_month: number
     exp_year: number
+    funding: string
+    country: string
+    fingerprint: string
   } | null
 }
 
 interface Invoice {
   id: string
   amount_paid: number
+  amount_due: number
+  amount_total: number
   currency: string
   status: string
   created: number
+  period_start: number
+  period_end: number
   invoice_pdf: string | null
   number: string | null
+  description: string | null
+  subtotal: number
+  tax: number | null
+  total: number
+}
+
+interface Charge {
+  id: string
+  amount: number
+  currency: string
+  status: string
+  created: number
+  description: string | null
+  receipt_url: string | null
+  payment_method_details: {
+    type: string
+    card: {
+      brand: string
+      last4: string
+      funding: string
+    } | null
+  } | null
+  outcome: {
+    network_status: string
+    reason: string | null
+    risk_level: string
+    seller_message: string
+    type: string
+  } | null
+}
+
+interface UpcomingInvoice {
+  amount_due: number
+  amount_total: number
+  currency: string
+  period_start: number
+  period_end: number
+  subtotal: number
+  tax: number | null
+  total: number
 }
 
 interface AccountData {
@@ -51,6 +107,8 @@ interface AccountData {
   subscription: Subscription | null
   paymentMethods: PaymentMethod[]
   invoices: Invoice[]
+  charges: Charge[]
+  upcomingInvoice: UpcomingInvoice | null
 }
 
 export default function AccountPage() {
@@ -244,6 +302,101 @@ export default function AccountPage() {
             <p className="text-gray-500">No active subscription found.</p>
           )}
         </div>
+
+        {/* Upcoming Invoice */}
+        {accountData?.upcomingInvoice && (
+          <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Upcoming Invoice</h2>
+            <div className="space-y-2">
+              <p className="text-gray-700">
+                <span className="font-medium">Amount due:</span>{' '}
+                {formatCurrency(accountData.upcomingInvoice.amount_due, accountData.upcomingInvoice.currency)}
+              </p>
+              <p className="text-gray-700">
+                <span className="font-medium">Billing period:</span>{' '}
+                {formatDate(accountData.upcomingInvoice.period_start)} - {formatDate(accountData.upcomingInvoice.period_end)}
+              </p>
+              <p className="text-gray-700">
+                <span className="font-medium">Subtotal:</span>{' '}
+                {formatCurrency(accountData.upcomingInvoice.subtotal, accountData.upcomingInvoice.currency)}
+              </p>
+              {accountData.upcomingInvoice.tax && (
+                <p className="text-gray-700">
+                  <span className="font-medium">Tax:</span>{' '}
+                  {formatCurrency(accountData.upcomingInvoice.tax, accountData.upcomingInvoice.currency)}
+                </p>
+              )}
+              <p className="text-gray-700 text-lg font-semibold">
+                <span className="font-medium">Total:</span>{' '}
+                {formatCurrency(accountData.upcomingInvoice.total, accountData.upcomingInvoice.currency)}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Payment History */}
+        {accountData?.charges && accountData.charges.length > 0 && (
+          <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Payment History</h2>
+            <div className="space-y-4">
+              {accountData.charges.map((charge) => (
+                <div key={charge.id} className="border-b border-gray-100 last:border-b-0 pb-4 last:pb-0">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-4 mb-2">
+                        <p className="text-gray-900 font-medium">
+                          {formatCurrency(charge.amount, charge.currency)}
+                        </p>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          charge.status === 'succeeded' 
+                            ? 'bg-green-100 text-green-800'
+                            : charge.status === 'failed'
+                            ? 'bg-red-100 text-red-800' 
+                            : 'bg-gray-100 text-gray-800'
+                        }`}>
+                          {charge.status.charAt(0).toUpperCase() + charge.status.slice(1)}
+                        </span>
+                        <span className="text-sm text-gray-500">
+                          {formatDate(charge.created)}
+                        </span>
+                      </div>
+                      {charge.description && (
+                        <p className="text-sm text-gray-600 mb-2">{charge.description}</p>
+                      )}
+                      {charge.payment_method_details?.card && (
+                        <p className="text-sm text-gray-500">
+                          {charge.payment_method_details.card.brand.toUpperCase()} •••• {charge.payment_method_details.card.last4} ({charge.payment_method_details.card.funding})
+                        </p>
+                      )}
+                      {charge.outcome && (
+                        <div className="mt-2">
+                          <p className="text-sm text-gray-600">
+                            <span className="font-medium">Network status:</span> {charge.outcome.network_status}
+                          </p>
+                          {charge.outcome.seller_message && (
+                            <p className="text-sm text-gray-600">
+                              <span className="font-medium">Message:</span> {charge.outcome.seller_message}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    {charge.receipt_url && (
+                      <a
+                        href={charge.receipt_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-800 text-sm font-medium ml-4"
+                      >
+                        View Receipt
+                      </a>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Payment Method */}
         <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
