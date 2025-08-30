@@ -4,13 +4,27 @@ import Link from 'next/link'
 import { useUser } from '@clerk/nextjs'
 import CheckoutButton from '@/components/pricing/CheckoutButton'
 
+interface Plan {
+  name: string
+  price: string
+  trialText?: string
+  originalPrice?: string
+  period: string
+  description: string
+  features: string[]
+  popular: boolean
+  cta: string
+}
+
 export default function PricingPage() {
   const { user, isSignedIn } = useUser()
 
-  const plans = [
+  const plans: Plan[] = [
     {
       name: 'Starter',
-      price: '$29',
+      price: 'Free',
+      trialText: 'for 7 days',
+      originalPrice: '$29',
       period: '/month',
       description: 'Perfect for individual investors getting started',
       features: [
@@ -25,7 +39,9 @@ export default function PricingPage() {
     },
     {
       name: 'Professional',
-      price: '$79',
+      price: 'Free',
+      trialText: 'for 7 days', 
+      originalPrice: '$79',
       period: '/month',
       description: 'Ideal for active investors and small teams',
       features: [
@@ -90,10 +106,10 @@ export default function PricingPage() {
       <div className="max-w-7xl mx-auto px-4 py-16">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Simple, Transparent Pricing
+            Start Free, Scale Smart
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Choose the plan that fits your investment strategy. All plans include access to our AI-powered matching platform.
+            Try any plan free for 7 days. Choose the plan that fits your investment strategy and get full access to our AI-powered matching platform.
           </p>
         </div>
 
@@ -119,12 +135,29 @@ export default function PricingPage() {
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
                 <p className="text-gray-600 mb-4">{plan.description}</p>
-                <div className="flex items-baseline justify-center">
-                  <span className="text-5xl font-bold text-gray-900">{plan.price}</span>
-                  {plan.period && (
-                    <span className="text-xl text-gray-500 ml-1">{plan.period}</span>
-                  )}
-                </div>
+                {plan.trialText ? (
+                  <div>
+                    <div className="flex items-baseline justify-center">
+                      <span className="text-4xl font-bold text-green-600">{plan.price}</span>
+                      {plan.trialText && (
+                        <span className="text-lg text-gray-500 ml-2">{plan.trialText}</span>
+                      )}
+                    </div>
+                    <div className="flex items-baseline justify-center mt-2">
+                      <span className="text-2xl text-gray-500">then {plan.originalPrice}</span>
+                      {plan.period && (
+                        <span className="text-lg text-gray-400 ml-1">{plan.period}</span>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-baseline justify-center">
+                    <span className="text-5xl font-bold text-gray-900">{plan.price}</span>
+                    {plan.period && (
+                      <span className="text-xl text-gray-500 ml-1">{plan.period}</span>
+                    )}
+                  </div>
+                )}
               </div>
 
               <ul className="space-y-4 mb-8">

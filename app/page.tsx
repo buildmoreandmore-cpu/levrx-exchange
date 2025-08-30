@@ -140,9 +140,17 @@ export default function Home() {
             </h1>
 
             {/* Subtext */}
-            <p className="text-xl text-gray-500 max-w-2xl mx-auto mb-12">
+            <p className="text-xl text-gray-500 max-w-2xl mx-auto mb-8">
               A marketplace where assets and opportunities find each other, powered by AI.
             </p>
+
+            {/* Free Trial Badge */}
+            <div className="inline-flex items-center px-4 py-2 bg-green-50 border border-green-200 rounded-full text-green-700 font-medium mb-8">
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Start your 7-day free trial today
+            </div>
 
             {/* Browse Marketplace CTA */}
             <div className="mb-8">
@@ -241,8 +249,8 @@ export default function Home() {
         <section id="pricing" className="py-24 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">Simple, Transparent Pricing</h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">Choose the plan that fits your investment strategy. All plans include access to our AI-powered matching platform.</p>
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">Start Free, Scale Smart</h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">Try any plan free for 7 days. Choose the plan that fits your investment strategy and get full access to our AI-powered matching platform.</p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -252,8 +260,12 @@ export default function Home() {
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">Starter</h3>
                   <p className="text-gray-600 mb-4">Perfect for individual investors getting started</p>
                   <div className="flex items-baseline justify-center">
-                    <span className="text-5xl font-bold text-gray-900">$29</span>
-                    <span className="text-xl text-gray-500 ml-1">/month</span>
+                    <span className="text-3xl font-bold text-green-600">Free</span>
+                    <span className="text-lg text-gray-500 ml-2">for 7 days</span>
+                  </div>
+                  <div className="flex items-baseline justify-center mt-2">
+                    <span className="text-2xl text-gray-500">then $29</span>
+                    <span className="text-lg text-gray-400 ml-1">/month</span>
                   </div>
                 </div>
 
@@ -308,8 +320,12 @@ export default function Home() {
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">Professional</h3>
                   <p className="text-gray-600 mb-4">Ideal for active investors and small teams</p>
                   <div className="flex items-baseline justify-center">
-                    <span className="text-5xl font-bold text-gray-900">$79</span>
-                    <span className="text-xl text-gray-500 ml-1">/month</span>
+                    <span className="text-3xl font-bold text-green-600">Free</span>
+                    <span className="text-lg text-gray-500 ml-2">for 7 days</span>
+                  </div>
+                  <div className="flex items-baseline justify-center mt-2">
+                    <span className="text-2xl text-gray-500">then $79</span>
+                    <span className="text-lg text-gray-400 ml-1">/month</span>
                   </div>
                 </div>
 
