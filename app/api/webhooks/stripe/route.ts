@@ -57,9 +57,20 @@ export async function POST(req: NextRequest) {
         const session = event.data.object as Stripe.Checkout.Session
         console.log('💰 Payment completed for session:', session.id)
         
-        // TODO: Update user subscription in database
-        // const { client_reference_id, customer, subscription } = session
-        // await updateUserSubscription(client_reference_id, subscription)
+        // Update customer metadata with userId for easier lookup
+        if (session.customer && session.client_reference_id) {
+          try {
+            await stripe.customers.update(session.customer as string, {
+              metadata: {
+                userId: session.client_reference_id,
+                source: 'levrx_checkout'
+              }
+            })
+            console.log('✅ Customer metadata updated for user:', session.client_reference_id)
+          } catch (error) {
+            console.error('❌ Failed to update customer metadata:', error)
+          }
+        }
         
         break
       }
@@ -67,6 +78,21 @@ export async function POST(req: NextRequest) {
       case 'customer.subscription.created': {
         const subscription = event.data.object as Stripe.Subscription
         console.log('🆕 New subscription created:', subscription.id)
+        
+        // Ensure customer has userId metadata
+        if (subscription.customer && subscription.metadata?.userId) {
+          try {
+            await stripe.customers.update(subscription.customer as string, {
+              metadata: {
+                userId: subscription.metadata.userId,
+                source: 'levrx_subscription'
+              }
+            })
+            console.log('✅ Customer metadata updated from subscription for user:', subscription.metadata.userId)
+          } catch (error) {
+            console.error('❌ Failed to update customer metadata from subscription:', error)
+          }
+        }
         break
       }
 
