@@ -32,7 +32,14 @@ function CheckoutPageContent() {
         throw new Error(`HTTP ${response.status}: ${data.error || 'Unknown error'}`)
       }
 
-      if (data.sessionId) {
+      if (data.sessionId && data.url) {
+        setResult('Redirecting to Stripe checkout...')
+        
+        // Use direct URL redirect instead of redirectToCheckout
+        window.location.href = data.url
+        
+      } else if (data.sessionId && !data.url) {
+        // Fallback to old method if only sessionId is provided
         setResult('Redirecting to Stripe checkout...')
         
         // Load Stripe and redirect
@@ -48,7 +55,7 @@ function CheckoutPageContent() {
           setResult('❌ Failed to load Stripe')
         }
       } else {
-        setResult('❌ No session ID received')
+        setResult('❌ No session ID or URL received')
       }
       
     } catch (error) {
