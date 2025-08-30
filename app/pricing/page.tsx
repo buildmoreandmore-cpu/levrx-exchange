@@ -136,17 +136,18 @@ export default function PricingPage() {
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
                 <p className="text-gray-600 mb-4">{plan.description}</p>
                 {plan.trialText ? (
-                  <div>
-                    <div className="flex items-baseline justify-center">
-                      <span className="text-4xl font-bold text-green-600">{plan.price}</span>
+                  <div className="mb-4">
+                    <div className="inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full mb-3">
+                      <span className="text-2xl font-bold text-white">{plan.price}</span>
                       {plan.trialText && (
-                        <span className="text-lg text-gray-500 ml-2">{plan.trialText}</span>
+                        <span className="text-sm text-green-100 ml-2 font-medium">{plan.trialText}</span>
                       )}
                     </div>
-                    <div className="flex items-baseline justify-center mt-2">
-                      <span className="text-2xl text-gray-500">then {plan.originalPrice}</span>
+                    <div className="flex items-baseline justify-center">
+                      <span className="text-sm text-gray-500 mr-1">then</span>
+                      <span className="text-4xl font-bold text-gray-900">{plan.originalPrice}</span>
                       {plan.period && (
-                        <span className="text-lg text-gray-400 ml-1">{plan.period}</span>
+                        <span className="text-xl text-gray-500 ml-1">{plan.period}</span>
                       )}
                     </div>
                   </div>

@@ -259,13 +259,16 @@ export default function Home() {
                 <div className="text-center mb-8">
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">Starter</h3>
                   <p className="text-gray-600 mb-4">Perfect for individual investors getting started</p>
-                  <div className="flex items-baseline justify-center">
-                    <span className="text-3xl font-bold text-green-600">Free</span>
-                    <span className="text-lg text-gray-500 ml-2">for 7 days</span>
-                  </div>
-                  <div className="flex items-baseline justify-center mt-2">
-                    <span className="text-2xl text-gray-500">then $29</span>
-                    <span className="text-lg text-gray-400 ml-1">/month</span>
+                  <div className="mb-4">
+                    <div className="inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full mb-3">
+                      <span className="text-2xl font-bold text-white">Free</span>
+                      <span className="text-sm text-green-100 ml-2 font-medium">for 7 days</span>
+                    </div>
+                    <div className="flex items-baseline justify-center">
+                      <span className="text-sm text-gray-500 mr-1">then</span>
+                      <span className="text-4xl font-bold text-gray-900">$29</span>
+                      <span className="text-xl text-gray-500 ml-1">/month</span>
+                    </div>
                   </div>
                 </div>
 
@@ -319,13 +322,16 @@ export default function Home() {
                 <div className="text-center mb-8">
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">Professional</h3>
                   <p className="text-gray-600 mb-4">Ideal for active investors and small teams</p>
-                  <div className="flex items-baseline justify-center">
-                    <span className="text-3xl font-bold text-green-600">Free</span>
-                    <span className="text-lg text-gray-500 ml-2">for 7 days</span>
-                  </div>
-                  <div className="flex items-baseline justify-center mt-2">
-                    <span className="text-2xl text-gray-500">then $79</span>
-                    <span className="text-lg text-gray-400 ml-1">/month</span>
+                  <div className="mb-4">
+                    <div className="inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full mb-3">
+                      <span className="text-2xl font-bold text-white">Free</span>
+                      <span className="text-sm text-green-100 ml-2 font-medium">for 7 days</span>
+                    </div>
+                    <div className="flex items-baseline justify-center">
+                      <span className="text-sm text-gray-500 mr-1">then</span>
+                      <span className="text-4xl font-bold text-gray-900">$79</span>
+                      <span className="text-xl text-gray-500 ml-1">/month</span>
+                    </div>
                   </div>
                 </div>
 
