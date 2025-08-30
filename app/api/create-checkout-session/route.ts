@@ -115,9 +115,16 @@ export async function POST(req: NextRequest) {
       success_url: `https://levrx-exchange.vercel.app/dashboard?success=true&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `https://levrx-exchange.vercel.app/pricing?canceled=true`,
       client_reference_id: userId,
+      customer_creation: 'always',
       metadata: {
         userId,
         plan,
+      },
+      subscription_data: {
+        metadata: {
+          userId,
+          plan,
+        },
       },
     })
 

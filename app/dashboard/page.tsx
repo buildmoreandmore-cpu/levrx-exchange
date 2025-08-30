@@ -34,6 +34,7 @@ export default async function Dashboard() {
               <div className="hidden md:flex items-center space-x-6">
                 <Link href="/listings" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">Listings</Link>
                 <Link href="/matches" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">Matches</Link>
+                <Link href="/account" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">Account</Link>
               </div>
               <UserButton />
             </div>
