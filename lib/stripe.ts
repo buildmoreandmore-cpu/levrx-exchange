@@ -34,6 +34,7 @@ export const PRICING_PLANS = {
     name: 'Starter',
     price: 2900, // $29.00 in cents
     interval: 'month',
+    trialDays: 7,
     features: [
       'Up to 5 active listings',
       'Basic matching algorithm',
@@ -46,6 +47,7 @@ export const PRICING_PLANS = {
     name: 'Professional',
     price: 7900, // $79.00 in cents
     interval: 'month',
+    trialDays: 7,
     popular: true,
     features: [
       'Unlimited listings',
