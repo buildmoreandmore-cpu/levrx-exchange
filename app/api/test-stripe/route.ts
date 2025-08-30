@@ -14,19 +14,35 @@ export async function GET() {
       }, { status: 500 })
     }
 
-    // Test creating a simple product to verify API connectivity
-    const product = await stripe.products.create({
-      name: 'Test Product',
-      description: 'Test product for API connectivity',
+    // Test creating a checkout session with the same parameters
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: 'Test Product',
+              description: 'Test subscription',
+            },
+            unit_amount: 2900,
+            recurring: {
+              interval: 'month',
+            },
+          },
+          quantity: 1,
+        },
+      ],
+      mode: 'subscription',
+      success_url: `https://levrx-exchange.vercel.app/dashboard?success=true&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `https://levrx-exchange.vercel.app/pricing?canceled=true`,
     })
-
-    // Clean up - delete the test product
-    await stripe.products.del(product.id)
 
     return NextResponse.json({ 
       success: true,
-      message: 'Stripe API working correctly',
-      product_test: 'Created and deleted test product successfully'
+      message: 'Stripe checkout session created successfully',
+      session_id: session.id,
+      session_url: session.url
     })
 
   } catch (error) {
@@ -34,7 +50,8 @@ export async function GET() {
     return NextResponse.json({
       error: 'Stripe test failed',
       message: error instanceof Error ? error.message : 'Unknown error',
-      stack: error instanceof Error ? error.stack : undefined
+      stack: error instanceof Error ? error.stack : undefined,
+      name: error instanceof Error ? error.name : undefined
     }, { status: 500 })
   }
 }
