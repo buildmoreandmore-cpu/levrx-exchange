@@ -34,14 +34,12 @@ export async function POST(req: NextRequest) {
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
-      billing_address_collection: 'required',
       line_items: [
         {
           price_data: {
             currency: 'usd',
             product_data: {
               name: `LevrX ${planDetails.name} Plan`,
-              description: `Monthly subscription to LevrX ${planDetails.name} plan`,
             },
             unit_amount: planDetails.price!,
             recurring: {
@@ -52,21 +50,8 @@ export async function POST(req: NextRequest) {
         },
       ],
       mode: 'subscription',
-      success_url: `https://levrx-exchange.vercel.app/dashboard?success=true&session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `https://levrx-exchange.vercel.app/dashboard?success=true`,
       cancel_url: `https://levrx-exchange.vercel.app/pricing?canceled=true`,
-      customer_email: undefined, // Let Stripe collect email
-      allow_promotion_codes: true,
-      metadata: {
-        userId: userId,
-        plan: plan,
-      },
-      client_reference_id: userId,
-      subscription_data: {
-        metadata: {
-          userId: userId,
-          plan: plan,
-        },
-      },
     })
 
     return NextResponse.json({ sessionId: session.id })
