@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { UserButton } from '@clerk/nextjs'
 import GroupedSelect from '@/components/forms/GroupedSelect'
 import ChipGroup from '@/components/forms/ChipGroup'
+import AppHeader from '@/components/ui/AppHeader'
 import {
   PACKAGE_TYPES,
   PROPERTY_TYPES,
@@ -608,7 +609,7 @@ function NewListingContent() {
           </label>
           <select
             id="packageType"
-            value={formData.packageType || 'Property'}
+            value={formData.packageType || ''}
             onChange={(e) => updateFormData({ packageType: e.target.value })}
             className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
               errors.packageType ? 'border-red-300' : 'border-gray-300'
@@ -805,18 +806,9 @@ function NewListingContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/dashboard" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">L</span>
-            </div>
-            <h1 className="text-2xl font-bold text-gray-900">LevrX</h1>
-          </Link>
-          <UserButton />
-        </div>
-      </header>
+      <AppHeader>
+        <UserButton />
+      </AppHeader>
 
       {/* Main Content */}
       <main className="max-w-4xl mx-auto px-4 py-8">

@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useUser } from '@clerk/nextjs'
 import CheckoutButton from '@/components/pricing/CheckoutButton'
+import AppHeader from '@/components/ui/AppHeader'
 
 interface Plan {
   name: string
@@ -77,30 +78,20 @@ export default function PricingPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/" className="flex items-center">
-            <div className="text-2xl font-bold text-gray-900 hover:text-blue-600 transition-colors">
-              LevrX
-            </div>
+      <AppHeader>
+        <Link href="/listings" className="text-gray-700 hover:text-gray-900 font-medium">
+          Browse Listings
+        </Link>
+        {isSignedIn ? (
+          <Link href="/dashboard" className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700">
+            Dashboard
           </Link>
-          <nav className="flex items-center space-x-6">
-            <Link href="/listings" className="text-gray-700 hover:text-gray-900 font-medium">
-              Browse Listings
-            </Link>
-            {isSignedIn ? (
-              <Link href="/dashboard" className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700">
-                Dashboard
-              </Link>
-            ) : (
-              <Link href="/sign-up" className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700">
-                Get Started
-              </Link>
-            )}
-          </nav>
-        </div>
-      </header>
+        ) : (
+          <Link href="/sign-up" className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700">
+            Get Started
+          </Link>
+        )}
+      </AppHeader>
 
       {/* Hero Section */}
       <div className="max-w-7xl mx-auto px-4 py-16">
