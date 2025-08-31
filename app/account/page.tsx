@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useUser } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import AppHeader from '@/components/ui/AppHeader'
 
 interface Subscription {
   id: string
@@ -239,27 +240,17 @@ export default function AccountPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/" className="flex items-center">
-            <div className="text-2xl font-bold text-gray-900 hover:text-blue-600 transition-colors">
-              LevrX
-            </div>
-          </Link>
-          <nav className="flex items-center space-x-6">
-            <Link href="/dashboard" className="text-gray-700 hover:text-gray-900 font-medium">
-              Dashboard
-            </Link>
-            <Link href="/pricing" className="text-gray-700 hover:text-gray-900 font-medium">
-              Pricing
-            </Link>
-            <div className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium">
-              Account
-            </div>
-          </nav>
+      <AppHeader>
+        <Link href="/dashboard" className="text-gray-700 hover:text-gray-900 font-medium">
+          Dashboard
+        </Link>
+        <Link href="/pricing" className="text-gray-700 hover:text-gray-900 font-medium">
+          Pricing
+        </Link>
+        <div className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium">
+          Account
         </div>
-      </header>
+      </AppHeader>
 
       <div className="max-w-4xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Account</h1>
