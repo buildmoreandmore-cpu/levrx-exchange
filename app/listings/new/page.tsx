@@ -202,14 +202,12 @@ function NewListingContent() {
         localStorage.removeItem(DRAFT_KEY) // Clear draft on success
         router.push(`/listings/${result.id}`)
       } else {
-        throw new Error('API request failed')
+        const errorData = await response.json().catch(() => ({ error: 'Failed to parse error response' }))
+        throw new Error(`API request failed: ${errorData.error || 'Unknown error'}`)
       }
     } catch (error) {
       console.error('Error creating listing:', error)
-      // Show success toast and redirect for demo purposes
-      alert('Listing created successfully! (Demo mode)')
-      localStorage.removeItem(DRAFT_KEY)
-      router.push('/dashboard')
+      alert(`Error creating listing: ${error instanceof Error ? error.message : 'Unknown error'}`)
     } finally {
       setIsSubmitting(false)
     }
