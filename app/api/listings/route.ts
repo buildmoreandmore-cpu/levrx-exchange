@@ -10,7 +10,25 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { mode, title, description, type, category, estValue, targetValue, terms, constraints } = body
+    console.log('Received listing data:', body)
+
+    // Extract common fields
+    const { 
+      kind, // HAVE or WANT
+      category, // Cash, Paper, Stuff, Property
+      title,
+      description,
+      notes,
+      // Cash fields
+      cashSource, amount, targetReturn, minTerm, maxTerm, geography,
+      // Paper fields  
+      paperType, upb, interestRate, term, paymentType, collateralDescription, acceptableTerms,
+      // Stuff fields
+      itemType, estimatedValue, condition, exchangePreferences,
+      // Property fields
+      packageType, propertyType, city, state, price, noiAnnual, currentDebt,
+      sellerUrgency, sellerReasons, benefitsSought, benefitsToNewOwner, dealStructure, timeline
+    } = body
 
     // Create user if doesn't exist
     await prisma.user.upsert({
@@ -26,16 +44,35 @@ export async function POST(request: NextRequest) {
     let assetId = null
     let wantId = null
 
-    // Create asset or want based on mode
-    if (mode === 'HAVE') {
+    // Prepare structured data based on category
+    const structuredData = {
+      category,
+      ...(category === 'Cash' && {
+        cashSource, amount, targetReturn, minTerm, maxTerm, geography
+      }),
+      ...(category === 'Paper' && {
+        paperType, upb, interestRate, term, paymentType, collateralDescription, acceptableTerms
+      }),
+      ...(category === 'Stuff' && {
+        itemType, estimatedValue, condition, exchangePreferences  
+      }),
+      ...(category === 'Property' && {
+        packageType, propertyType, city, state, price, noiAnnual, currentDebt,
+        sellerUrgency, sellerReasons, benefitsSought, benefitsToNewOwner, dealStructure, timeline
+      }),
+      ...(notes && { notes })
+    }
+
+    // Create asset or want based on kind
+    if (kind === 'HAVE') {
       const asset = await prisma.asset.create({
         data: {
           userId: user.id,
-          type,
+          type: category, // Use category as type
           title,
           description,
-          estValueNumeric: estValue,
-          terms: terms ? { text: terms } : undefined,
+          estValueNumeric: amount || estimatedValue || price || upb || null,
+          terms: structuredData ? { data: structuredData } : undefined,
         },
       })
       assetId = asset.id
@@ -46,22 +83,18 @@ export async function POST(request: NextRequest) {
           category,
           title,
           description,
-          targetValueNumeric: targetValue,
-          constraints: constraints ? { text: constraints } : undefined,
+          targetValueNumeric: amount || estimatedValue || price || upb || null,
+          constraints: structuredData ? { data: structuredData } : undefined,
         },
       })
       wantId = want.id
     }
 
-    // Note: For MVP, we'll skip embeddings since they require a different API
-    // In production, you'd use a service like OpenAI embeddings or similar
-    console.log('Skipping embedding generation for MVP')
-
     // Create listing
     const listing = await prisma.listing.create({
       data: {
         userId: user.id,
-        mode,
+        mode: kind, // Use kind as mode (HAVE/WANT)
         assetId,
         wantId,
         status: 'ACTIVE',
@@ -70,15 +103,22 @@ export async function POST(request: NextRequest) {
       include: {
         asset: true,
         want: true,
-        user: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
       },
     })
 
+    console.log('Successfully created listing:', listing.id)
     return NextResponse.json(listing)
   } catch (error) {
     console.error('Error creating listing:', error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     )
   }
