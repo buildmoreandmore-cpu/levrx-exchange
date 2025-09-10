@@ -38,8 +38,16 @@ export async function POST(request: NextRequest) {
     title = rawTitle
     description = rawDescription
 
+    // Add input validation for required fields
+    if (!kind || !title || !category) {
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      )
+    }
+
     // Validate "kind" field
-    if (!kind || (kind !== 'HAVE' && kind !== 'WANT')) {
+    if (kind !== 'HAVE' && kind !== 'WANT') {
       return NextResponse.json(
         { error: "Invalid 'kind'. Must be HAVE or WANT." },
         { status: 400 }
@@ -81,6 +89,9 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Add request logging before saving
+    console.log("Incoming listing data:", { kind, category, title, description });
+
     // Prepare structured data based on category
     const structuredData = {
       category,
@@ -100,62 +111,71 @@ export async function POST(request: NextRequest) {
       ...(notes && { notes })
     }
 
-    // Create asset or want based on kind
-    if (kind === 'HAVE') {
-      const asset = await prisma.asset.create({
-        data: {
-          userId: user.id,
-          type: mapCategoryToAssetType(category),
-          title,
-          description,
-          estValueNumeric: amount || estimatedValue || price || upb || null,
-          terms: structuredData,
-        },
-      })
-      assetId = asset.id
-    } else {
-      const want = await prisma.want.create({
-        data: {
-          userId: user.id,
-          category: mapCategoryToWantCategory(category),
-          title,
-          description,
-          targetValueNumeric: amount || estimatedValue || price || upb || null,
-          constraints: structuredData,
-        },
-      })
-      wantId = want.id
-    }
+    // Wrap Prisma calls in try/catch for better error handling
+    try {
+      // Create asset or want based on kind
+      if (kind === 'HAVE') {
+        const asset = await prisma.asset.create({
+          data: {
+            userId: user.id,
+            type: mapCategoryToAssetType(category),
+            title,
+            description,
+            estValueNumeric: amount || estimatedValue || price || upb || null,
+            terms: structuredData,
+          },
+        })
+        assetId = asset.id
+      } else {
+        const want = await prisma.want.create({
+          data: {
+            userId: user.id,
+            category: mapCategoryToWantCategory(category),
+            title,
+            description,
+            targetValueNumeric: amount || estimatedValue || price || upb || null,
+            constraints: structuredData,
+          },
+        })
+        wantId = want.id
+      }
 
-    // Create listing
-    const listing = await prisma.listing.create({
-      data: {
-        userId: user.id,
-        mode: kind, // Use kind as mode (HAVE/WANT)
-        assetId,
-        wantId,
-        status: 'ACTIVE',
-        // vectorEmbedding would be set here if we had embeddings
-      },
-      include: {
-        asset: true,
-        want: true,
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
+      // Create listing
+      const listing = await prisma.listing.create({
+        data: {
+          userId: user.id,
+          mode: kind, // Use kind as mode (HAVE/WANT)
+          assetId,
+          wantId,
+          status: 'ACTIVE',
+          // vectorEmbedding would be set here if we had embeddings
+        },
+        include: {
+          asset: true,
+          want: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
           },
         },
-      },
-    })
+      })
 
-    console.log('Successfully created listing with restored database:', listing.id)
-    return NextResponse.json(listing)
+      console.log('Successfully created listing:', listing.id)
+      return NextResponse.json(listing)
+    } catch (prismaError) {
+      console.error("Error creating listing:", prismaError);
+      return NextResponse.json(
+        { error: "Database save failed", details: prismaError instanceof Error ? prismaError.message : "Unknown database error" },
+        { status: 500 }
+      )
+    }
+
   } catch (error) {
     console.error('Error creating listing:', error)
     console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace')
-    console.error('User info: Error occurred before user validation')
     console.error('Request data:', { kind, category, title, description })
     
     // Test database connection in catch block
