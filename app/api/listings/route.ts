@@ -139,6 +139,17 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error creating listing:', error)
     console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace')
+    console.error('User info:', { userId: user?.id, email: user?.emailAddresses?.[0]?.emailAddress })
+    console.error('Request data:', { kind, category, title, description })
+    
+    // Test database connection in catch block
+    try {
+      await prisma.$queryRaw`SELECT 1`
+      console.log('Database connection is working')
+    } catch (dbError) {
+      console.error('Database connection failed in catch:', dbError)
+    }
+    
     return NextResponse.json(
       { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
