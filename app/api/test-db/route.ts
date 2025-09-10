@@ -5,7 +5,7 @@ export async function GET(request: NextRequest) {
   try {
     // Simple database connection test
     const result = await prisma.$queryRaw`SELECT 1 as test`
-    console.log('Database connection test successful with updated URL:', result)
+    console.log('Database connection test successful with correct levrx-db project:', result)
     
     return NextResponse.json({ 
       success: true, 
