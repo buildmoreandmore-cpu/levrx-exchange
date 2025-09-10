@@ -3,6 +3,8 @@ import { currentUser } from '@clerk/nextjs/server'
 import { prisma } from '@/lib/db'
 
 export async function POST(request: NextRequest) {
+  let kind: string = '', category: string = '', title: string = '', description: string = ''
+  
   try {
     const user = await currentUser()
     if (!user) {
@@ -14,10 +16,10 @@ export async function POST(request: NextRequest) {
 
     // Extract common fields
     const { 
-      kind, // HAVE or WANT
-      category, // Cash, Paper, Stuff, Property
-      title,
-      description,
+      kind: rawKind, // HAVE or WANT
+      category: rawCategory, // Cash, Paper, Stuff, Property
+      title: rawTitle,
+      description: rawDescription,
       notes,
       // Cash fields
       cashSource, amount, targetReturn, minTerm, maxTerm, geography,
@@ -29,6 +31,20 @@ export async function POST(request: NextRequest) {
       packageType, propertyType, city, state, price, noiAnnual, currentDebt,
       sellerUrgency, sellerReasons, benefitsSought, benefitsToNewOwner, dealStructure, timeline
     } = body
+
+    // Assign to outer scope variables for error handling
+    kind = rawKind
+    category = rawCategory
+    title = rawTitle
+    description = rawDescription
+
+    // Validate "kind" field
+    if (!kind || (kind !== 'HAVE' && kind !== 'WANT')) {
+      return NextResponse.json(
+        { error: "Invalid 'kind'. Must be HAVE or WANT." },
+        { status: 400 }
+      )
+    }
 
     // Create user if doesn't exist
     await prisma.user.upsert({
