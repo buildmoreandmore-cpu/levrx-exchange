@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { UserButton } from '@clerk/nextjs'
+import { UserButton, useAuth } from '@clerk/nextjs'
 import GroupedSelect from '@/components/forms/GroupedSelect'
 import ChipGroup from '@/components/forms/ChipGroup'
 import AppHeader from '@/components/ui/AppHeader'
@@ -80,6 +80,7 @@ const DRAFT_KEY = 'levrx:new-listing:draft'
 function NewListingContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { isSignedIn } = useAuth()
   
   // Initialize from URL params
   const initialKind = searchParams.get('kind') === 'WANT' ? 'WANT' : 'HAVE'
@@ -202,7 +203,16 @@ function NewListingContent() {
         localStorage.removeItem(DRAFT_KEY) // Clear draft on success
         router.push(`/listings/${result.id}`)
       } else {
-        const errorData = await response.json().catch(() => ({ error: 'Failed to parse error response' }))
+        // Handle authentication errors specifically
+        if (response.status === 401 || response.status === 405) {
+          alert('You must be signed in to create a listing. Redirecting to sign in...')
+          router.push('/sign-in?redirect_url=' + encodeURIComponent(window.location.href))
+          return
+        }
+        
+        const errorData = await response.json().catch(() => ({ 
+          error: response.status === 500 ? 'Server error - please try again later' : 'Failed to parse error response' 
+        }))
         throw new Error(`API request failed: ${errorData.error || 'Unknown error'}`)
       }
     } catch (error) {
@@ -846,14 +856,21 @@ function NewListingContent() {
             </Link>
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || !isSignedIn}
               className={`px-6 py-2 rounded-lg font-medium ${
-                formData.kind === 'HAVE'
-                  ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                  : 'bg-green-600 hover:bg-green-700 text-white'
+                !isSignedIn 
+                  ? 'bg-gray-400 text-white cursor-not-allowed' 
+                  : formData.kind === 'HAVE'
+                    ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                    : 'bg-green-600 hover:bg-green-700 text-white'
               } ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+              title={!isSignedIn ? 'Sign in to create listings' : undefined}
             >
-              {isSubmitting ? 'Creating...' : 'Create Listing'}
+              {!isSignedIn 
+                ? 'Sign In to Create Listing'
+                : isSubmitting 
+                  ? 'Creating...' 
+                  : 'Create Listing'}
             </button>
           </div>
         </form>
