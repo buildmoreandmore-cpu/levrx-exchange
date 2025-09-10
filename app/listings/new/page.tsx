@@ -75,12 +75,13 @@ interface FormData {
   notes?: string
 }
 
-const DRAFT_KEY = 'levrx:new-listing:draft'
-
 function NewListingContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { isSignedIn } = useAuth()
+  const { isSignedIn, userId } = useAuth()
+  
+  // Make draft key user-specific to prevent cross-user data contamination
+  const DRAFT_KEY = `levrx:new-listing:draft:${userId || 'anonymous'}`
   
   // Initialize from URL params
   const initialKind = searchParams.get('kind') === 'WANT' ? 'WANT' : 'HAVE'
@@ -123,6 +124,21 @@ function NewListingContent() {
       }
     }
   }, [])
+
+  // Clear old drafts when user changes
+  useEffect(() => {
+    if (userId) {
+      // Clear any old non-user-specific drafts
+      localStorage.removeItem('levrx:new-listing:draft')
+      // Clear drafts from other users
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i)
+        if (key && key.startsWith('levrx:new-listing:draft:') && key !== DRAFT_KEY) {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+  }, [userId, DRAFT_KEY])
 
   // Save draft to localStorage on form changes
   useEffect(() => {
