@@ -139,7 +139,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error creating listing:', error)
     console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace')
-    console.error('User info:', { userId: user?.id, email: user?.emailAddresses?.[0]?.emailAddress })
+    console.error('User info: Error occurred before user validation')
     console.error('Request data:', { kind, category, title, description })
     
     // Test database connection in catch block
