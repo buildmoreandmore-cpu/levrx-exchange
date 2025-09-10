@@ -44,6 +44,27 @@ export async function POST(request: NextRequest) {
     let assetId = null
     let wantId = null
 
+    // Map frontend categories to database enums
+    const mapCategoryToAssetType = (category: string) => {
+      switch (category) {
+        case 'Cash': return 'CASHFLOW'
+        case 'Paper': return 'CREDIT'
+        case 'Property': return 'EQUITY'
+        case 'Stuff': return 'EQUIPMENT'
+        default: return 'OTHER'
+      }
+    }
+
+    const mapCategoryToWantCategory = (category: string) => {
+      switch (category) {
+        case 'Cash': return 'CASH'
+        case 'Paper': return 'OTHER'
+        case 'Property': return 'BUYER'
+        case 'Stuff': return 'EQUIPMENT'
+        default: return 'OTHER'
+      }
+    }
+
     // Prepare structured data based on category
     const structuredData = {
       category,
@@ -68,7 +89,7 @@ export async function POST(request: NextRequest) {
       const asset = await prisma.asset.create({
         data: {
           userId: user.id,
-          type: category, // Use category as type
+          type: mapCategoryToAssetType(category),
           title,
           description,
           estValueNumeric: amount || estimatedValue || price || upb || null,
@@ -80,7 +101,7 @@ export async function POST(request: NextRequest) {
       const want = await prisma.want.create({
         data: {
           userId: user.id,
-          category,
+          category: mapCategoryToWantCategory(category),
           title,
           description,
           targetValueNumeric: amount || estimatedValue || price || upb || null,
