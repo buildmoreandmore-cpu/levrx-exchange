@@ -11,7 +11,7 @@ export default function Footer() {
               <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-sm">
                 <span className="text-white font-bold text-base">L</span>
               </div>
-              <span className="text-xl font-bold text-gray-900">LevrX</span>
+              <span className="text-xl font-bold text-gray-900">LVRXchange</span>
             </div>
             <p className="text-gray-600 text-sm leading-relaxed mb-6">
               The real estate exchange where assets and opportunities find each other through AI-powered matching.
@@ -118,7 +118,7 @@ export default function Footer() {
         <div className="mt-12 pt-8 border-t border-gray-200">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-sm text-gray-500">
-              © 2025 LevrX. All rights reserved.
+              © 2025 LVRXchange. All rights reserved.
             </p>
             <div className="mt-4 md:mt-0 flex space-x-6">
               <Link href="#" className="text-sm text-gray-500 hover:text-gray-600 transition-colors">
