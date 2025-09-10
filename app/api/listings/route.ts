@@ -134,7 +134,7 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    console.log('Successfully created listing:', listing.id)
+    console.log('Successfully created listing with updated auth:', listing.id)
     return NextResponse.json(listing)
   } catch (error) {
     console.error('Error creating listing:', error)
