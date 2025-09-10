@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
           title,
           description,
           estValueNumeric: amount || estimatedValue || price || upb || null,
-          terms: structuredData ? { data: structuredData } : undefined,
+          terms: structuredData,
         },
       })
       assetId = asset.id
@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
           title,
           description,
           targetValueNumeric: amount || estimatedValue || price || upb || null,
-          constraints: structuredData ? { data: structuredData } : undefined,
+          constraints: structuredData,
         },
       })
       wantId = want.id
@@ -138,6 +138,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(listing)
   } catch (error) {
     console.error('Error creating listing:', error)
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace')
     return NextResponse.json(
       { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
