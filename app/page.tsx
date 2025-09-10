@@ -32,13 +32,13 @@ export default function Home() {
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "LevrX",
+    "name": "LVRXchange",
     "description": "AI-powered real estate exchange platform connecting properties, capital, and opportunities",
-    "url": "https://levrx-exchange.vercel.app",
-    "logo": "https://levrx-exchange.vercel.app/logo.png",
+    "url": "https://www.lvrxchange.com",
+    "logo": "https://www.lvrxchange.com/logo.png",
     "sameAs": [
-      "https://twitter.com/levrx",
-      "https://linkedin.com/company/levrx"
+      "https://twitter.com/lvrxchange",
+      "https://linkedin.com/company/lvrxchange"
     ],
     "contactPoint": {
       "@type": "ContactPoint",
@@ -51,14 +51,14 @@ export default function Home() {
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "LevrX",
+    "name": "LVRXchange",
     "description": "Real estate exchange platform powered by AI matching",
-    "url": "https://levrx-exchange.vercel.app",
+    "url": "https://www.lvrxchange.com",
     "potentialAction": {
       "@type": "SearchAction",
       "target": {
         "@type": "EntryPoint",
-        "urlTemplate": "https://levrx-exchange.vercel.app/search?q={search_term_string}"
+        "urlTemplate": "https://www.lvrxchange.com/search?q={search_term_string}"
       },
       "query-input": "required name=search_term_string"
     }
@@ -72,7 +72,7 @@ export default function Home() {
     "description": "AI-powered marketplace for real estate opportunities, partnerships, and property trading",
     "provider": {
       "@type": "Organization",
-      "name": "LevrX"
+      "name": "LVRXchange"
     },
     "serviceType": "Real Estate Technology Platform",
     "areaServed": "United States",
