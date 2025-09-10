@@ -18,7 +18,7 @@ export default function AppHeader({ children }: AppHeaderProps) {
       <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
         <Link href={logoHref} className="flex items-center">
           <div className="text-2xl font-bold text-gray-900 hover:text-blue-600 transition-colors">
-            LevrX
+            LVRXchange
           </div>
         </Link>
         {children && (

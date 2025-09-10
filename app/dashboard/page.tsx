@@ -27,7 +27,7 @@ export default async function Dashboard() {
               <div className="w-9 h-9 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center shadow-sm">
                 <span className="text-white font-bold text-lg">L</span>
               </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">LevrX</h1>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">LVRXchange</h1>
             </div>
             
             <div className="flex items-center space-x-4">

@@ -32,7 +32,7 @@ export default function Navbar() {
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <div className="text-xl sm:text-2xl font-bold text-gray-900 hover:text-blue-600 transition-colors">
-            LevrX
+            LVRXchange
           </div>
         </Link>
 
