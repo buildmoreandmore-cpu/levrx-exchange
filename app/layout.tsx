@@ -11,7 +11,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "LevrX - The Leverage Exchange",
+  title: "LVRXchange - The Leverage Exchange",
   description:
     "Leverage what you have to get what you want. A marketplace where assets and opportunities find each other, powered by AI.",
   generator: "v0.app",
