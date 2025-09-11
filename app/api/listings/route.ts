@@ -6,13 +6,17 @@ export async function POST(request: NextRequest) {
   let kind: string = '', category: string = '', title: string = '', description: string = ''
   
   try {
+    console.log('🔍 Step 1: Starting API request processing')
+    
     const user = await currentUser()
+    console.log('🔍 Step 2: Got user from Clerk:', user ? 'User found' : 'No user')
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    console.log('🔍 Step 3: Parsing request body')
     const body = await request.json()
-    console.log('Received listing data:', body)
+    console.log('🔍 Step 4: Received listing data:', body)
 
     // Extract common fields
     const { 
@@ -55,6 +59,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create user if doesn't exist
+    console.log('🔍 Step 5: Creating/updating user in database')
     await prisma.user.upsert({
       where: { email: user.emailAddresses[0].emailAddress },
       update: { name: `${user.firstName} ${user.lastName}`.trim() || null },
@@ -64,6 +69,7 @@ export async function POST(request: NextRequest) {
         name: `${user.firstName} ${user.lastName}`.trim() || null,
       },
     })
+    console.log('🔍 Step 6: User upsert completed successfully')
 
     let assetId = null
     let wantId = null
