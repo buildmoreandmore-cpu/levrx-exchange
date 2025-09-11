@@ -222,7 +222,7 @@ function NewListingContent() {
       if (response.ok) {
         const result = await response.json()
         localStorage.removeItem(DRAFT_KEY) // Clear draft on success
-        router.push(`/listings/${result.id}`)
+        router.push(`/listings/${result.listing.id}`)
       } else {
         // Handle authentication errors specifically
         if (response.status === 401 || response.status === 405) {
