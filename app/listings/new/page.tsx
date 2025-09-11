@@ -207,6 +207,7 @@ function NewListingContent() {
     try {
       console.log('🚀 CACHE-BUST-2024: Form payload:', formData)
       console.log('🚀 IMPROVED ERROR HANDLING ACTIVE')
+      console.log('🚀 AUTH STATUS CHECK:', { isSignedIn, userId })
       
       // Try to POST to API
       const response = await fetch('/api/listings', {
