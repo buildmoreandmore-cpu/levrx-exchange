@@ -166,9 +166,9 @@ export async function POST(request: NextRequest) {
       console.log('Successfully created listing:', listing.id)
       return NextResponse.json({ success: true, listing })
     } catch (error: any) {
-      console.error("❌ Error creating listing:", error);
+      console.error("❌ PRISMA ERROR creating listing:", error);
       return NextResponse.json(
-        { success: false, message: "Failed to create listing", error: error.message, stack: error.stack },
+        { success: false, message: "Failed to create listing - Prisma error", error: error.message, stack: error.stack },
         { status: 500 }
       )
     }
@@ -195,7 +195,7 @@ export async function POST(request: NextRequest) {
     }
     
     return NextResponse.json(
-      { success: false, error: 'Internal server error' },
+      { success: false, error: 'Internal server error - General catch block' },
       { status: 500 }
     )
   }
