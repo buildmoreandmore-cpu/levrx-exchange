@@ -9,7 +9,19 @@ const isProtectedRoute = createRouteMatcher([
 
 export default clerkMiddleware(async (auth, request) => {
   if (isProtectedRoute(request)) {
-    await auth.protect()
+    try {
+      await auth.protect()
+    } catch (error) {
+      // Return proper 401 instead of 404 redirect for API routes
+      if (request.nextUrl.pathname.startsWith('/api/')) {
+        return new Response(
+          JSON.stringify({ success: false, error: 'Unauthorized - Authentication required' }),
+          { status: 401, headers: { 'Content-Type': 'application/json' } }
+        )
+      }
+      // For non-API routes, let Clerk handle the redirect
+      throw error
+    }
   }
 })
 
