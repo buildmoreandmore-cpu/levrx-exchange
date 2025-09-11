@@ -36,6 +36,12 @@ export default async function Dashboard() {
                 <Link href="/matches" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">Matches</Link>
                 <Link href="/account" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">Account</Link>
               </div>
+              <Link 
+                href="/listings/new" 
+                className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md"
+              >
+                Post Listing
+              </Link>
               <UserButton />
             </div>
           </div>

@@ -81,18 +81,28 @@ export default function ListingDetail() {
     
     setFindingMatches(true)
     try {
+      console.log('🔍 Finding matches for listing:', listing.id)
+      
       const response = await fetch('/api/match', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ listingId: listing.id }),
       })
       
+      console.log('🔍 Match API response status:', response.status)
+      
       if (response.ok) {
         const data = await response.json()
+        console.log('🔍 Match data received:', data)
         setMatches(data)
+      } else {
+        const errorData = await response.json().catch(() => ({ error: 'Failed to parse error response' }))
+        console.error('🔍 Match API error:', response.status, errorData)
+        alert(`Failed to find matches: ${errorData.error || 'Unknown error'}`)
       }
     } catch (error) {
-      console.error('Error finding matches:', error)
+      console.error('🔍 Error finding matches:', error)
+      alert(`Error finding matches: ${error instanceof Error ? error.message : 'Unknown error'}`)
     } finally {
       setFindingMatches(false)
     }
@@ -136,7 +146,15 @@ export default function ListingDetail() {
             </div>
             <h1 className="text-2xl font-bold text-gray-900">LevrX</h1>
           </Link>
-          <UserButton />
+          <div className="flex items-center space-x-4">
+            <Link 
+              href="/listings/new" 
+              className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+            >
+              Post Listing
+            </Link>
+            <UserButton />
+          </div>
         </div>
       </header>
 
