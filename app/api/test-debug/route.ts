@@ -18,14 +18,14 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    // Test database connection with direct URL (no newlines)
-    console.log('🔍 TEST Step 3: Testing database connection with clean URL')
-    const cleanDatabaseUrl = "postgresql://postgres:howyykAe9mU820op@db.utryyaxfodtpdlhssjlv.supabase.co:5432/postgres"
+    // Test database connection with Transaction Pooler URL
+    console.log('🔍 TEST Step 3: Testing database connection with Transaction Pooler URL')
+    const poolerDatabaseUrl = "postgresql://postgres.utryyaxfodtpdlhssjlv:howyykAe9mU820op@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
     
     const prisma = new PrismaClient({
       datasources: {
         db: {
-          url: cleanDatabaseUrl
+          url: poolerDatabaseUrl
         }
       }
     })
