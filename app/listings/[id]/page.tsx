@@ -146,15 +146,7 @@ export default function ListingDetail() {
             </div>
             <h1 className="text-2xl font-bold text-gray-900">LevrX</h1>
           </Link>
-          <div className="flex items-center space-x-4">
-            <Link 
-              href="/listings/new" 
-              className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-            >
-              Post Listing
-            </Link>
-            <UserButton />
-          </div>
+          <UserButton />
         </div>
       </header>
 
@@ -238,6 +230,13 @@ export default function ListingDetail() {
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Find Matches</h3>
+              
+              <Link 
+                href="/listings/new" 
+                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-4 rounded-lg font-medium transition-colors mb-3 block text-center"
+              >
+                Post Listing
+              </Link>
               
               <button
                 onClick={findMatches}
