@@ -39,9 +39,9 @@ export async function POST(request: NextRequest) {
     description = rawDescription
 
     // Add input validation for required fields
-    if (!kind || !title || !category) {
+    if (!kind || !title || !description) {
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { success: false, message: "Missing required fields" },
         { status: 400 }
       )
     }
@@ -164,11 +164,11 @@ export async function POST(request: NextRequest) {
       })
 
       console.log('Successfully created listing:', listing.id)
-      return NextResponse.json(listing)
-    } catch (prismaError) {
-      console.error("Error creating listing:", prismaError);
+      return NextResponse.json({ success: true, listing })
+    } catch (error: any) {
+      console.error("❌ Error creating listing:", error);
       return NextResponse.json(
-        { error: "Database save failed", details: prismaError instanceof Error ? prismaError.message : "Unknown database error" },
+        { success: false, message: "Failed to create listing", error: error.message, stack: error.stack },
         { status: 500 }
       )
     }
