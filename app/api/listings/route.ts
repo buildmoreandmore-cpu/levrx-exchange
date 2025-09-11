@@ -174,20 +174,28 @@ export async function POST(request: NextRequest) {
     }
 
   } catch (error) {
-    console.error('Error creating listing:', error)
-    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace')
-    console.error('Request data:', { kind, category, title, description })
+    // Enhanced logging for debugging
+    console.error('❌ FULL ERROR DETAILS:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : 'No stack trace',
+      requestBody: { kind, category, title, description },
+      timestamp: new Date().toISOString(),
+      errorType: error instanceof Error ? error.constructor.name : typeof error
+    })
     
     // Test database connection in catch block
     try {
       await prisma.$queryRaw`SELECT 1`
-      console.log('Database connection is working')
+      console.log('✅ Database connection is working in catch block')
     } catch (dbError) {
-      console.error('Database connection failed in catch:', dbError)
+      console.error('❌ Database connection failed in catch:', {
+        message: dbError instanceof Error ? dbError.message : 'Unknown DB error',
+        stack: dbError instanceof Error ? dbError.stack : 'No DB stack trace'
+      })
     }
     
     return NextResponse.json(
-      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
+      { success: false, error: 'Internal server error' },
       { status: 500 }
     )
   }
