@@ -2,6 +2,14 @@ import { NextRequest, NextResponse } from 'next/server'
 import { currentUser } from '@clerk/nextjs/server'
 import { PrismaClient } from '@prisma/client'
 
+export async function GET() {
+  return NextResponse.json({
+    message: 'Test listing endpoint is working. Use POST method to run the full test.',
+    endpoint: '/api/test-listing',
+    method: 'POST'
+  })
+}
+
 export async function POST(request: NextRequest) {
   try {
     console.log('🧪 TEST LISTING: Starting test listing creation')
