@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { currentUser } from '@clerk/nextjs/server'
-import { prisma } from '@/lib/db'
+import { PrismaClient } from '@prisma/client'
 
 export async function GET(request: NextRequest) {
   try {
@@ -18,21 +18,34 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    // Test database connection
-    console.log('🔍 TEST Step 3: Testing database connection')
+    // Test database connection with direct URL (no newlines)
+    console.log('🔍 TEST Step 3: Testing database connection with clean URL')
+    const cleanDatabaseUrl = "postgresql://postgres:howyykAe9mU820op@db.utryyaxfodtpdlhssjlv.supabase.co:5432/postgres"
+    
+    const prisma = new PrismaClient({
+      datasources: {
+        db: {
+          url: cleanDatabaseUrl
+        }
+      }
+    })
+
+    console.log('🔍 TEST Step 4: Created Prisma client with clean URL')
     const dbTest = await prisma.$queryRaw`SELECT 1 as test`
-    console.log('🔍 TEST Step 4: Database test result:', dbTest)
+    console.log('🔍 TEST Step 5: Database test result:', dbTest)
 
     // Test user table access
-    console.log('🔍 TEST Step 5: Testing user table access')
+    console.log('🔍 TEST Step 6: Testing user table access')
     const userCount = await prisma.user.count()
-    console.log('🔍 TEST Step 6: User count:', userCount)
+    console.log('🔍 TEST Step 7: User count:', userCount)
 
     // Test if user exists in database
     const existingUser = await prisma.user.findUnique({
       where: { email: user.emailAddresses[0].emailAddress }
     })
-    console.log('🔍 TEST Step 7: Existing user:', existingUser ? 'Found' : 'Not found')
+    console.log('🔍 TEST Step 8: Existing user:', existingUser ? 'Found' : 'Not found')
+    
+    await prisma.$disconnect()
 
     return NextResponse.json({
       success: true,
