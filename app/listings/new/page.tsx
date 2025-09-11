@@ -205,7 +205,8 @@ function NewListingContent() {
     setIsSubmitting(true)
     
     try {
-      console.log('Form payload:', formData)
+      console.log('🚀 CACHE-BUST-2024: Form payload:', formData)
+      console.log('🚀 IMPROVED ERROR HANDLING ACTIVE')
       
       // Try to POST to API
       const response = await fetch('/api/listings', {
@@ -213,6 +214,9 @@ function NewListingContent() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       })
+      
+      console.log('🚀 Response status:', response.status)
+      console.log('🚀 Response headers:', Object.fromEntries(response.headers.entries()))
       
       if (response.ok) {
         const result = await response.json()
@@ -229,7 +233,7 @@ function NewListingContent() {
         const errorData = await response.json().catch(() => ({ 
           error: response.status === 500 ? 'Server error - please try again later' : 'Failed to parse error response' 
         }))
-        throw new Error(`API request failed: ${errorData.error || 'Unknown error'}`)
+        throw new Error(`🚨 DETAILED ERROR [v2024]: ${errorData.error || errorData.message || 'Unknown API error'}`)
       }
     } catch (error) {
       console.error('Error creating listing:', error)
