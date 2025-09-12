@@ -2,17 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { currentUser } from '@clerk/nextjs/server'
 import { PrismaClient } from '@prisma/client'
 
-// Use the same database connection that works in our test
-const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: "postgresql://postgres.utryyaxfodtpdlhssjlv:howyykAe9mU820op@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
-    }
-  }
-})
-
 export async function POST(request: NextRequest) {
   let kind: string = '', category: string = '', title: string = '', description: string = ''
+  let prismaClient: PrismaClient | null = null
   
   try {
     console.log('🔍 Step 1: Starting API request processing')
@@ -26,6 +18,16 @@ export async function POST(request: NextRequest) {
     console.log('🔍 Step 3: Parsing request body')
     const body = await request.json()
     console.log('🔍 Step 4: Received listing data:', body)
+
+    // Create fresh Prisma client with correct connection
+    console.log('🔍 Step 5: Creating fresh Prisma client')
+    prismaClient = new PrismaClient({
+      datasources: {
+        db: {
+          url: "postgresql://postgres.utryyaxfodtpdlhssjlv:howyykAe9mU820op@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
+        }
+      }
+    })
 
     // Extract common fields
     const { 
@@ -68,8 +70,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Create user if doesn't exist
-    console.log('🔍 Step 5: Creating/updating user in database')
-    await prisma.user.upsert({
+    console.log('🔍 Step 6: Creating/updating user in database')
+    await prismaClient.user.upsert({
       where: { email: user.emailAddresses[0].emailAddress },
       update: { name: `${user.firstName} ${user.lastName}`.trim() || null },
       create: {
@@ -78,7 +80,7 @@ export async function POST(request: NextRequest) {
         name: `${user.firstName} ${user.lastName}`.trim() || null,
       },
     })
-    console.log('🔍 Step 6: User upsert completed successfully')
+    console.log('🔍 Step 7: User upsert completed successfully')
 
     let assetId = null
     let wantId = null
@@ -130,7 +132,7 @@ export async function POST(request: NextRequest) {
     try {
       // Create asset or want based on kind
       if (kind === 'HAVE') {
-        const asset = await prisma.asset.create({
+        const asset = await prismaClient.asset.create({
           data: {
             userId: user.id,
             type: mapCategoryToAssetType(category),
@@ -142,7 +144,7 @@ export async function POST(request: NextRequest) {
         })
         assetId = asset.id
       } else {
-        const want = await prisma.want.create({
+        const want = await prismaClient.want.create({
           data: {
             userId: user.id,
             category: mapCategoryToWantCategory(category),
@@ -156,7 +158,7 @@ export async function POST(request: NextRequest) {
       }
 
       // Create listing
-      const listing = await prisma.listing.create({
+      const listing = await prismaClient.listing.create({
         data: {
           userId: user.id,
           mode: kind, // Use kind as mode (HAVE/WANT)
@@ -179,11 +181,11 @@ export async function POST(request: NextRequest) {
       })
 
       console.log('Successfully created listing:', listing.id)
-      await prisma.$disconnect()
+      await prismaClient.$disconnect()
       return NextResponse.json({ success: true, listing })
     } catch (error: any) {
       console.error("❌ PRISMA ERROR creating listing:", error);
-      await prisma.$disconnect()
+      if (prismaClient) await prismaClient.$disconnect()
       return NextResponse.json(
         { success: false, message: "Failed to create listing - Prisma error", error: error.message, stack: error.stack },
         { status: 500 }
@@ -202,8 +204,10 @@ export async function POST(request: NextRequest) {
     
     // Test database connection in catch block
     try {
-      await prisma.$queryRaw`SELECT 1`
-      console.log('✅ Database connection is working in catch block')
+      if (prismaClient) {
+        await prismaClient.$queryRaw`SELECT 1`
+        console.log('✅ Database connection is working in catch block')
+      }
     } catch (dbError) {
       console.error('❌ Database connection failed in catch:', {
         message: dbError instanceof Error ? dbError.message : 'Unknown DB error',
@@ -219,11 +223,22 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
+  let prismaClient: PrismaClient | null = null
+  
   try {
     const user = await currentUser()
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
+
+    // Create fresh Prisma client for GET as well
+    prismaClient = new PrismaClient({
+      datasources: {
+        db: {
+          url: "postgresql://postgres.utryyaxfodtpdlhssjlv:howyykAe9mU820op@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
+        }
+      }
+    })
 
     const { searchParams } = new URL(request.url)
     const mode = searchParams.get('mode')
@@ -246,7 +261,7 @@ export async function GET(request: NextRequest) {
       ]
     }
 
-    const listings = await prisma.listing.findMany({
+    const listings = await prismaClient.listing.findMany({
       where,
       include: {
         asset: true,
@@ -265,9 +280,11 @@ export async function GET(request: NextRequest) {
       take: 50,
     })
 
+    await prismaClient.$disconnect()
     return NextResponse.json(listings)
   } catch (error) {
     console.error('Error fetching listings:', error)
+    if (prismaClient) await prismaClient.$disconnect()
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
