@@ -1,6 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { currentUser } from '@clerk/nextjs/server'
-import { prisma } from '@/lib/db'
+import { PrismaClient } from '@prisma/client'
+
+// Use the same database connection that works in our test
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: "postgresql://postgres.utryyaxfodtpdlhssjlv:howyykAe9mU820op@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
+    }
+  }
+})
 
 export async function POST(request: NextRequest) {
   let kind: string = '', category: string = '', title: string = '', description: string = ''
@@ -170,9 +179,11 @@ export async function POST(request: NextRequest) {
       })
 
       console.log('Successfully created listing:', listing.id)
+      await prisma.$disconnect()
       return NextResponse.json({ success: true, listing })
     } catch (error: any) {
       console.error("❌ PRISMA ERROR creating listing:", error);
+      await prisma.$disconnect()
       return NextResponse.json(
         { success: false, message: "Failed to create listing - Prisma error", error: error.message, stack: error.stack },
         { status: 500 }
