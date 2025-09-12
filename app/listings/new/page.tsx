@@ -221,8 +221,22 @@ function NewListingContent() {
       
       if (response.ok) {
         const result = await response.json()
-        localStorage.removeItem(DRAFT_KEY) // Clear draft on success
-        router.push(`/listings/${result.listing.id}`)
+        console.log('🚀 FULL API RESPONSE:', result)
+        console.log('🚀 RESULT STRUCTURE:', {
+          success: result.success,
+          listing: result.listing,
+          listingId: result.listing?.id,
+          hasListing: !!result.listing
+        })
+        
+        if (result.success && result.listing?.id) {
+          localStorage.removeItem(DRAFT_KEY) // Clear draft on success
+          console.log('🚀 REDIRECTING TO:', `/listings/${result.listing.id}`)
+          router.push(`/listings/${result.listing.id}`)
+        } else {
+          console.error('🚀 SUCCESS BUT NO LISTING ID:', result)
+          alert('Listing created but redirect failed. Check console for details.')
+        }
       } else {
         // Handle authentication errors specifically
         if (response.status === 401 || response.status === 405) {
