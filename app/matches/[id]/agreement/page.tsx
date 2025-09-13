@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { useParams, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { UserButton } from '@clerk/nextjs'
+import { useUser, UserButton } from '@clerk/nextjs'
 
 export const dynamic = 'force-dynamic'
 
@@ -17,6 +17,7 @@ interface Agreement {
 }
 
 export default function AgreementDraftPage() {
+  const { isSignedIn } = useUser()
   const params = useParams()
   const searchParams = useSearchParams()
   const matchId = params.id as string

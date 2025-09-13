@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useUser } from '@clerk/nextjs'
 import { mockListings } from '@/lib/mockListings'
-import { Listing } from '@/types/exchange'
+import { sampleListings, SampleListing } from '@/lib/sample-data'
+import { Listing, PackageType, PropertyType } from '@/src/types/exchange'
 
 interface DatabaseListing {
   id: string
@@ -34,15 +36,54 @@ interface DatabaseListing {
 }
 
 export default function ListingsPage() {
+  const { isSignedIn, isLoaded } = useUser()
   const [listings, setListings] = useState<Listing[]>([])
   const [filter, setFilter] = useState<'ALL' | 'HAVE' | 'WANT'>('ALL')
   const [loading, setLoading] = useState(true)
 
-  // Fetch listings from database
+  // Convert sample listings to the format expected by the component
+  const convertSampleListings = (sampleListings: SampleListing[]): Listing[] => {
+    return sampleListings.map(listing => ({
+      id: listing.id,
+      kind: listing.kind,
+      packageType: 'Property' as PackageType, // All demo listings are properties
+      propertyType: listing.packageType.includes('Commercial') ? 'Office' : 
+                   listing.packageType.includes('Residential') ? 'Multifamily (5+ units)' :
+                   listing.packageType.includes('Development') ? 'Entitled Commercial Land' :
+                   listing.packageType.includes('Industrial') ? 'Industrial/Flex' :
+                   listing.packageType.includes('Mixed') ? 'Mixed-Use' :
+                   'Other' as PropertyType,
+      city: listing.location.city,
+      state: listing.location.state,
+      price: listing.financials.currentValue || listing.financials.investmentAmount,
+      noiAnnual: undefined, // Sample data doesn't include NOI
+      currentDebt: undefined,
+      sellerUrgency: 'Medium' as const,
+      sellerReasons: [],
+      benefitsSought: [],
+      benefitsToNewOwner: [],
+      notes: listing.description,
+      createdAt: listing.createdAt
+    }))
+  }
+
+  // Fetch listings based on authentication status
   useEffect(() => {
+    if (!isLoaded) return // Wait for Clerk to load
+
     const fetchListings = async () => {
       try {
-        console.log('🔍 Fetching listings from API...')
+        if (!isSignedIn) {
+          // For non-authenticated users, show sample data
+          console.log('👋 Showing sample data for visitor')
+          const convertedSampleListings = convertSampleListings(sampleListings)
+          setListings(convertedSampleListings)
+          setLoading(false)
+          return
+        }
+
+        // For authenticated users, fetch real data
+        console.log('🔍 Fetching real listings from API for authenticated user...')
         const response = await fetch('/api/listings')
         console.log('🔍 API Response status:', response.status)
         
@@ -79,20 +120,20 @@ export default function ListingsPage() {
           setListings(transformedListings)
         } else {
           console.error('❌ Failed to fetch listings:', response.status, response.statusText)
-          // Fall back to mock data
-          setListings(mockListings)
+          // For authenticated users, show empty state instead of sample data
+          setListings([])
         }
       } catch (error) {
         console.error('❌ Error fetching listings:', error)
-        // Fall back to mock data
-        setListings(mockListings)
+        // For authenticated users, show empty state instead of sample data
+        setListings([])
       } finally {
         setLoading(false)
       }
     }
 
     fetchListings()
-  }, [])
+  }, [isSignedIn, isLoaded])
 
   const filteredListings = listings.filter(listing => 
     filter === 'ALL' || listing.kind === filter
@@ -127,37 +168,64 @@ export default function ListingsPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">All Listings</h1>
+            <h1 className="text-3xl font-bold text-gray-900">
+              {isSignedIn ? 'All Listings' : 'Browse Marketplace'}
+            </h1>
             <p className="text-gray-600 mt-1">
-              Browse marketplace opportunities and partnerships
+              {isSignedIn 
+                ? 'Browse marketplace opportunities and partnerships'
+                : 'Explore demo listings and see how the platform works'
+              }
             </p>
           </div>
           <div className="flex space-x-3">
-            <Link
-              href="/dashboard"
-              className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center"
-            >
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z" />
-              </svg>
-              Dashboard
-            </Link>
-            <Link
-              href="/matches"
-              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center"
-            >
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-              View Matches
-            </Link>
-            <Link
-              href="/listings/new"
-              className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-            >
-              Create Listing
-            </Link>
+            {isSignedIn ? (
+              <>
+                <Link
+                  href="/dashboard"
+                  className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center"
+                >
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z" />
+                  </svg>
+                  Dashboard
+                </Link>
+                <Link
+                  href="/matches"
+                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center"
+                >
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  View Matches
+                </Link>
+                <Link
+                  href="/listings/new"
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                >
+                  Create Listing
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/matches"
+                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center"
+                >
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  View Demo Matches
+                </Link>
+                <Link
+                  href="/sign-in"
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                >
+                  Sign In to Create Listing
+                </Link>
+              </>
+            )}
           </div>
         </div>
 
@@ -312,7 +380,8 @@ export default function ListingsPage() {
         )}
 
         {/* Demo Notice */}
-        <div className="mt-12 bg-blue-50 border border-blue-200 rounded-lg p-6">
+        {!isSignedIn && (
+          <div className="mt-12 bg-blue-50 border border-blue-200 rounded-lg p-6">
           <div className="flex items-start">
             <div className="flex-shrink-0">
               <svg className="w-5 h-5 text-blue-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
@@ -320,14 +389,15 @@ export default function ListingsPage() {
               </svg>
             </div>
             <div className="ml-3">
-              <h3 className="text-sm font-medium text-blue-800">Sample Data Included</h3>
+              <h3 className="text-sm font-medium text-blue-800">Demo Experience</h3>
               <p className="mt-1 text-sm text-blue-700">
-                Some listings shown are sample data for demonstration. Your created listings are stored locally and will persist across sessions.
-                <Link href="/listings/new" className="font-medium underline ml-1">Create your own listing</Link> to get started with real partnerships.
+                You're viewing demo listings to explore how LVRXchange works. These are sample opportunities for demonstration purposes.
+                <Link href="/sign-in" className="font-medium underline ml-1">Sign in</Link> to create real listings and find actual partnerships.
               </p>
             </div>
           </div>
         </div>
+        )}
       </div>
     </div>
   )

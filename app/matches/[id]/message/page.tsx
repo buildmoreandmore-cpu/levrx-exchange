@@ -32,7 +32,7 @@ interface Match {
 }
 
 export default function MessagePage() {
-  const { user } = useUser()
+  const { user, isSignedIn } = useUser()
   const params = useParams()
   const matchId = params.id as string
   const [messages, setMessages] = useState<Message[]>([])
@@ -253,22 +253,39 @@ export default function MessagePage() {
 
           {/* Message Input */}
           <div className="border-t border-gray-200 p-4">
-            <form onSubmit={handleSendMessage} className="flex space-x-2">
-              <input
-                type="text"
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                placeholder="Type your message..."
-                className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-              <button
-                type="submit"
-                disabled={!newMessage.trim()}
-                className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Send
-              </button>
-            </form>
+            {isSignedIn ? (
+              <form onSubmit={handleSendMessage} className="flex space-x-2">
+                <input
+                  type="text"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  placeholder="Type your message..."
+                  className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+                <button
+                  type="submit"
+                  disabled={!newMessage.trim()}
+                  className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Send
+                </button>
+              </form>
+            ) : (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-blue-900">Demo Mode</p>
+                    <p className="text-xs text-blue-700">Sign in to send real messages and communicate with matches</p>
+                  </div>
+                  <Link 
+                    href="/sign-in"
+                    className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700"
+                  >
+                    Sign In
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

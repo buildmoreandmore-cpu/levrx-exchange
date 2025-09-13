@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { UserButton } from '@clerk/nextjs'
+import { useUser, UserButton } from '@clerk/nextjs'
+import { sampleMatchesFormatted, SampleMatchFormatted } from '@/lib/sample-data'
 
 export const dynamic = 'force-dynamic'
 
@@ -31,16 +32,29 @@ interface Match {
 }
 
 export default function MatchesPage() {
+  const { isSignedIn, isLoaded } = useUser()
   const [matches, setMatches] = useState<Match[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    if (!isLoaded) return // Wait for Clerk to load
+
+    if (!isSignedIn) {
+      // For non-authenticated users, show sample data
+      console.log('👋 Showing sample matches for visitor')
+      setMatches(sampleMatchesFormatted as Match[])
+      setLoading(false)
+      return
+    }
+
+    // For authenticated users, fetch real data
     fetchMatches()
-  }, [])
+  }, [isSignedIn, isLoaded])
 
   const fetchMatches = async () => {
     try {
+      console.log('🔍 Fetching real matches from API for authenticated user...')
       const response = await fetch('/api/match')
       if (response.ok) {
         const data = await response.json()
@@ -72,17 +86,27 @@ export default function MatchesPage() {
       {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/dashboard" className="flex items-center space-x-2">
+          <Link href={isSignedIn ? "/dashboard" : "/listings"} className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-lg">L</span>
             </div>
-            <h1 className="text-2xl font-bold text-gray-900">LevrX</h1>
+            <h1 className="text-2xl font-bold text-gray-900">LVRXchange</h1>
           </Link>
           <nav className="flex items-center space-x-6">
-            <Link href="/dashboard" className="text-gray-600 hover:text-gray-900">Dashboard</Link>
-            <Link href="/listings" className="text-gray-600 hover:text-gray-900">Listings</Link>
-            <Link href="/matches" className="text-indigo-600 font-medium">Matches</Link>
-            <UserButton />
+            {isSignedIn ? (
+              <>
+                <Link href="/dashboard" className="text-gray-600 hover:text-gray-900">Dashboard</Link>
+                <Link href="/listings" className="text-gray-600 hover:text-gray-900">Listings</Link>
+                <Link href="/matches" className="text-indigo-600 font-medium">Matches</Link>
+                <UserButton />
+              </>
+            ) : (
+              <>
+                <Link href="/listings" className="text-gray-600 hover:text-gray-900">Browse Listings</Link>
+                <Link href="/matches" className="text-indigo-600 font-medium">Demo Matches</Link>
+                <Link href="/sign-in" className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">Sign In</Link>
+              </>
+            )}
           </nav>
         </div>
       </header>
@@ -90,8 +114,15 @@ export default function MatchesPage() {
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Your Matches</h1>
-          <p className="text-gray-600">AI-generated matches based on your listings</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            {isSignedIn ? 'Your Matches' : 'Demo Matches'}
+          </h1>
+          <p className="text-gray-600">
+            {isSignedIn 
+              ? 'AI-generated matches based on your listings'
+              : 'See how our AI creates intelligent partnerships between investors and opportunities'
+            }
+          </p>
         </div>
 
         {error && (
@@ -216,6 +247,26 @@ export default function MatchesPage() {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Demo Notice for non-authenticated users */}
+        {!isSignedIn && matches.length > 0 && (
+          <div className="mt-12 bg-green-50 border border-green-200 rounded-lg p-6">
+            <div className="flex items-start">
+              <div className="flex-shrink-0">
+                <svg className="w-5 h-5 text-green-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-green-800">Demo Matches</h3>
+                <p className="mt-1 text-sm text-green-700">
+                  These are sample matches showing how our AI analyzes compatibility between opportunities and investors.
+                  <Link href="/sign-in" className="font-medium underline ml-1">Sign in</Link> to create real listings and get actual matches tailored to your portfolio.
+                </p>
+              </div>
+            </div>
           </div>
         )}
       </main>

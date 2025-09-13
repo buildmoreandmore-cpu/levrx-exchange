@@ -141,7 +141,7 @@ export default function Home() {
 
             {/* Subtext */}
             <p className="text-xl text-gray-500 max-w-2xl mx-auto mb-8">
-              A marketplace where assets and opportunities find each other, powered by AI.
+              An AI-powered marketplace where real estate assets, cash, and opportunities match instantly.
             </p>
 
             {/* Free Trial Badge */}

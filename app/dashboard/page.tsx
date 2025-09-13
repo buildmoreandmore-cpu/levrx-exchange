@@ -13,65 +13,31 @@ export default async function Dashboard() {
     redirect('/sign-in')
   }
 
-  // Create fresh Prisma client to get real listing counts
-  const prismaClient = new PrismaClient({
-    datasources: {
-      db: {
-        url: "postgresql://postgres.utryyaxfodtpdlhssjlv:howyykAe9mU820op@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
-      }
-    }
-  })
-
   let activeListingsCount = 0
-  let allUserListings: any[] = []
+  
   try {
-    // Get real listing count for current user
-    console.log(`🔍 Dashboard: Checking listings for user ID: ${user.id}`)
-    console.log(`🔍 Dashboard: User email: ${user.emailAddresses[0].emailAddress}`)
-    console.log(`🔍 Dashboard: Expected user ID: user_32URkX2mcMZMyiw2j1r48KbMx4K`)
-    console.log(`🔍 Dashboard: Expected email: martin@homeowner-support.com`)
-    console.log(`🔍 Dashboard: IDs match: ${user.id === 'user_32URkX2mcMZMyiw2j1r48KbMx4K'}`)
+    // Create fresh Prisma client to avoid connection issues
+    const prismaClient = new PrismaClient({
+      datasources: {
+        db: {
+          url: "postgresql://postgres.utryyaxfodtpdlhssjlv:howyykAe9mU820op@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
+        }
+      }
+    })
     
+    // Get real listing count for current user
     activeListingsCount = await prismaClient.listing.count({
       where: {
         userId: user.id,
         status: 'ACTIVE'
       }
     })
-    console.log(`📊 Dashboard: User ${user.id} has ${activeListingsCount} active listings`)
     
-    // Also get all listings for debugging
-    allUserListings = await prismaClient.listing.findMany({
-      where: {
-        userId: user.id
-      },
-      select: {
-        id: true,
-        mode: true,
-        status: true,
-        createdAt: true
-      }
-    })
-    console.log(`🔍 Dashboard: All listings for user:`, allUserListings)
-    
-    // Also check what listings exist for the expected user ID
-    const expectedUserListings = await prismaClient.listing.findMany({
-      where: {
-        userId: 'user_32URkX2mcMZMyiw2j1r48KbMx4K'
-      },
-      select: {
-        id: true,
-        mode: true,
-        status: true,
-        createdAt: true
-      }
-    })
-    console.log(`🔍 Dashboard: Listings for expected user ID:`, expectedUserListings)
+    await prismaClient.$disconnect()
     
   } catch (error) {
     console.error('❌ Dashboard: Error fetching listing count:', error)
-  } finally {
-    await prismaClient.$disconnect()
+    activeListingsCount = 0
   }
 
   const userName = user.firstName || user.username || user.emailAddresses[0].emailAddress.split('@')[0]
@@ -172,18 +138,18 @@ export default async function Dashboard() {
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-500">AI Matches</p>
-                    <p className="text-3xl font-bold text-gray-900">1</p>
+                    <p className="text-3xl font-bold text-gray-900">0</p>
                   </div>
                 </div>
-                <div className="flex items-center space-x-1 text-green-600">
+                <div className="flex items-center space-x-1 text-gray-500">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17l9.2-9.2M17 17H7V7" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h.01M12 12h.01M19 12h.01" />
                   </svg>
-                  <span className="text-sm font-medium">+100%</span>
+                  <span className="text-sm font-medium">--</span>
                 </div>
               </div>
-              <div className="flex items-center text-green-600 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                <span>View matches (85% score)</span>
+              <div className="flex items-center text-gray-600 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                <span>No matches yet</span>
                 <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
@@ -192,7 +158,7 @@ export default async function Dashboard() {
           </Link>
 
           {/* Active Discussions */}
-          <Link href="/matches/demo-match-1/message" className="group">
+          <div className="group cursor-not-allowed opacity-60">
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg hover:border-purple-200 transition-all duration-200 cursor-pointer group-hover:scale-105">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center space-x-3">
@@ -203,7 +169,7 @@ export default async function Dashboard() {
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-500">Discussions</p>
-                    <p className="text-3xl font-bold text-gray-900">1</p>
+                    <p className="text-3xl font-bold text-gray-900">0</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-1 text-green-600">
@@ -213,14 +179,14 @@ export default async function Dashboard() {
                   <span className="text-sm font-medium">+100%</span>
                 </div>
               </div>
-              <div className="flex items-center text-purple-600 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                <span>5 messages today</span>
+              <div className="flex items-center text-gray-600 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                <span>No discussions yet</span>
                 <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </div>
             </div>
-          </Link>
+          </div>
 
           {/* Agreements */}
           <Link href="/matches/demo-match-1/agreement" className="group">
@@ -399,44 +365,8 @@ export default async function Dashboard() {
                 </span>
               </div>
               
-              {/* Placeholder Match Cards */}
-              <div className="space-y-4">
-                <div className="p-4 rounded-xl border border-gray-100 bg-gradient-to-r from-green-50 to-emerald-50">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-emerald-700">Real Estate Investor</span>
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
-                      94% Match
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-600 mb-3">Seeking commercial properties in downtown area with development potential...</p>
-                  <button className="text-emerald-600 hover:text-emerald-700 text-sm font-medium">View Details →</button>
-                </div>
-
-                <div className="p-4 rounded-xl border border-gray-100 bg-gradient-to-r from-blue-50 to-indigo-50">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-indigo-700">Development Partner</span>
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
-                      87% Match
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-600 mb-3">Looking for joint venture opportunities in mixed-use residential projects...</p>
-                  <button className="text-indigo-600 hover:text-indigo-700 text-sm font-medium">View Details →</button>
-                </div>
-
-                <div className="p-4 rounded-xl border border-gray-100 bg-gradient-to-r from-purple-50 to-violet-50">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-purple-700">Capital Provider</span>
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                      82% Match
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-600 mb-3">Private equity firm specializing in real estate acquisitions and growth...</p>
-                  <button className="text-purple-600 hover:text-purple-700 text-sm font-medium">View Details →</button>
-                </div>
-              </div>
-
-              {/* Empty State Alternative */}
-              <div className="text-center py-8 hidden">
+              {/* Empty State - No Matches Yet */}
+              <div className="text-center py-8">
                 <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
