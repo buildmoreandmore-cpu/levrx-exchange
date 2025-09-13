@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { UserButton } from '@clerk/nextjs'
 import { currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
+import { PrismaClient } from '@prisma/client'
 
 export const dynamic = 'force-dynamic'
 
@@ -10,6 +11,31 @@ export default async function Dashboard() {
   
   if (!user) {
     redirect('/sign-in')
+  }
+
+  // Create fresh Prisma client to get real listing counts
+  const prismaClient = new PrismaClient({
+    datasources: {
+      db: {
+        url: "postgresql://postgres.utryyaxfodtpdlhssjlv:howyykAe9mU820op@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
+      }
+    }
+  })
+
+  let activeListingsCount = 0
+  try {
+    // Get real listing count for current user
+    activeListingsCount = await prismaClient.listing.count({
+      where: {
+        userId: user.id,
+        status: 'ACTIVE'
+      }
+    })
+    console.log(`📊 User ${user.id} has ${activeListingsCount} active listings`)
+  } catch (error) {
+    console.error('❌ Error fetching listing count:', error)
+  } finally {
+    await prismaClient.$disconnect()
   }
 
   const userName = user.firstName || user.username || user.emailAddresses[0].emailAddress.split('@')[0]
@@ -79,7 +105,7 @@ export default async function Dashboard() {
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-500">Active Listings</p>
-                    <p className="text-3xl font-bold text-gray-900">2</p>
+                    <p className="text-3xl font-bold text-gray-900">{activeListingsCount}</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-1 text-green-600">
@@ -270,25 +296,60 @@ export default async function Dashboard() {
                 </Link>
               </div>
               
-              {/* Empty State */}
-              <div className="text-center py-12 px-4">
-                <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-2v2m0 0V3m0 2h4m0 0V3m0 2v2" />
-                  </svg>
+              {/* Conditional display based on listing count */}
+              {activeListingsCount === 0 ? (
+                /* Empty State */
+                <div className="text-center py-12 px-4">
+                  <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-2v2m0 0V3m0 2h4m0 0V3m0 2v2" />
+                    </svg>
+                  </div>
+                  <h4 className="text-lg font-medium text-gray-900 mb-2">No listings yet</h4>
+                  <p className="text-gray-600 mb-6 max-w-sm mx-auto">Create your first listing to start connecting with potential partners and investors.</p>
+                  <Link 
+                    href="/listings/new"
+                    className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
+                  >
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    Create Listing
+                  </Link>
                 </div>
-                <h4 className="text-lg font-medium text-gray-900 mb-2">No listings yet</h4>
-                <p className="text-gray-600 mb-6 max-w-sm mx-auto">Create your first listing to start connecting with potential partners and investors.</p>
-                <Link 
-                  href="/listings/new"
-                  className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
-                >
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                  </svg>
-                  Create Listing
-                </Link>
-              </div>
+              ) : (
+                /* Listings exist - show summary */
+                <div className="text-center py-8 px-4">
+                  <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-2v2m0 0V3m0 2h4m0 0V3m0 2v2" />
+                    </svg>
+                  </div>
+                  <h4 className="text-lg font-medium text-gray-900 mb-2">
+                    {activeListingsCount} Active Listing{activeListingsCount !== 1 ? 's' : ''}
+                  </h4>
+                  <p className="text-gray-600 mb-6 max-w-sm mx-auto">
+                    Your listings are live and ready for potential partners to discover.
+                  </p>
+                  <div className="flex gap-3 justify-center">
+                    <Link 
+                      href="/listings"
+                      className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
+                    >
+                      View All Listings
+                    </Link>
+                    <Link 
+                      href="/listings/new"
+                      className="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-lg transition-colors"
+                    >
+                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                      </svg>
+                      Create Another
+                    </Link>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
