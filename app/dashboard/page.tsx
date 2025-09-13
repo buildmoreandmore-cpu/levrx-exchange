@@ -16,6 +16,12 @@ export default async function Dashboard() {
   let activeListingsCount = 0
   
   try {
+    console.log('🔍 Dashboard: Checking listings for user:', {
+      userId: user.id,
+      userEmail: user.emailAddresses[0]?.emailAddress,
+      userName: user.firstName + ' ' + user.lastName
+    })
+    
     // Create fresh Prisma client to avoid connection issues
     const prismaClient = new PrismaClient({
       datasources: {
@@ -25,6 +31,23 @@ export default async function Dashboard() {
       }
     })
     
+    // First, let's see all listings in the database
+    const allListings = await prismaClient.listing.findMany({
+      include: {
+        user: { select: { id: true, email: true, name: true } }
+      }
+    })
+    console.log('📊 Dashboard: Total listings in database:', allListings.length)
+    allListings.forEach((listing, index) => {
+      console.log(`📋 Dashboard: Listing ${index + 1}:`, {
+        id: listing.id,
+        userId: listing.userId,
+        userEmail: listing.user?.email,
+        status: listing.status,
+        mode: listing.mode
+      })
+    })
+    
     // Get real listing count for current user
     activeListingsCount = await prismaClient.listing.count({
       where: {
@@ -32,6 +55,8 @@ export default async function Dashboard() {
         status: 'ACTIVE'
       }
     })
+    
+    console.log('🔍 Dashboard: Active listings count for current user:', activeListingsCount)
     
     await prismaClient.$disconnect()
     
