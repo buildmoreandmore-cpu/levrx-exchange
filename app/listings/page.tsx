@@ -246,9 +246,12 @@ export default function ListingsPage() {
                       {new Date(listing.createdAt).toLocaleDateString()}
                     </span>
                   </div>
-                  <button className="text-indigo-600 hover:text-indigo-800 font-medium text-sm">
+                  <Link 
+                    href={`/listings/${listing.id}`}
+                    className="text-indigo-600 hover:text-indigo-800 font-medium text-sm"
+                  >
                     View Details →
-                  </button>
+                  </Link>
                 </div>
 
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">
