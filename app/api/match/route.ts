@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { currentUser } from '@clerk/nextjs/server'
-import { prisma } from '@/lib/db'
+import { PrismaClient } from '@prisma/client'
 import { anthropic, buildMatchRationalePrompt, buildDealStructuresPrompt } from '@/lib/anthropic'
 import { mockHaves, mockWants } from '@/lib/mockListings'
 
@@ -52,8 +52,55 @@ const demoMatch = {
 
 export async function GET() {
   try {
-    // For demo purposes, return the demo match without authentication
-    return NextResponse.json([demoMatch])
+    const user = await currentUser()
+    
+    if (!user) {
+      // For non-authenticated users, return demo match
+      console.log('👋 Returning demo matches for visitor')
+      return NextResponse.json([demoMatch])
+    }
+
+    // For authenticated users, return real matches
+    console.log('🔍 Fetching real matches for authenticated user:', user.id)
+    
+    const prisma = new PrismaClient({
+      datasources: {
+        db: {
+          url: "postgresql://postgres.utryyaxfodtpdlhssjlv:howyykAe9mU820op@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
+        }
+      }
+    })
+    
+    const matches = await prisma.match.findMany({
+      where: {
+        OR: [
+          { listingA: { userId: user.id } },
+          { listingB: { userId: user.id } }
+        ]
+      },
+      include: {
+        listingA: {
+          include: {
+            user: { select: { id: true, name: true } },
+            asset: { select: { title: true, type: true } },
+            want: { select: { title: true, category: true } }
+          }
+        },
+        listingB: {
+          include: {
+            user: { select: { id: true, name: true } },
+            asset: { select: { title: true, type: true } },
+            want: { select: { title: true, category: true } }
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
+    })
+
+    console.log('📊 Found real matches for user:', matches.length)
+    
+    await prisma.$disconnect()
+    return NextResponse.json(matches)
   } catch (error) {
     console.error('Error fetching matches:', error)
     return NextResponse.json(
@@ -71,6 +118,14 @@ export async function POST(request: NextRequest) {
     }
 
     const { listingId } = await request.json()
+
+    const prisma = new PrismaClient({
+      datasources: {
+        db: {
+          url: "postgresql://postgres.utryyaxfodtpdlhssjlv:howyykAe9mU820op@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
+        }
+      }
+    })
 
     const listing = await prisma.listing.findUnique({
       where: { id: listingId },
@@ -223,6 +278,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    await prisma.$disconnect()
     return NextResponse.json(matches)
   } catch (error) {
     console.error('Error finding matches:', error)
