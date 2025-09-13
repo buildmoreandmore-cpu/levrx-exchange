@@ -23,10 +23,14 @@ export default async function Dashboard() {
   })
 
   let activeListingsCount = 0
+  let allUserListings: any[] = []
   try {
     // Get real listing count for current user
     console.log(`🔍 Dashboard: Checking listings for user ID: ${user.id}`)
     console.log(`🔍 Dashboard: User email: ${user.emailAddresses[0].emailAddress}`)
+    console.log(`🔍 Dashboard: Expected user ID: user_32URkX2mcMZMyiw2j1r48KbMx4K`)
+    console.log(`🔍 Dashboard: Expected email: martin@homeowner-support.com`)
+    console.log(`🔍 Dashboard: IDs match: ${user.id === 'user_32URkX2mcMZMyiw2j1r48KbMx4K'}`)
     
     activeListingsCount = await prismaClient.listing.count({
       where: {
@@ -37,7 +41,7 @@ export default async function Dashboard() {
     console.log(`📊 Dashboard: User ${user.id} has ${activeListingsCount} active listings`)
     
     // Also get all listings for debugging
-    const allUserListings = await prismaClient.listing.findMany({
+    allUserListings = await prismaClient.listing.findMany({
       where: {
         userId: user.id
       },
@@ -49,6 +53,21 @@ export default async function Dashboard() {
       }
     })
     console.log(`🔍 Dashboard: All listings for user:`, allUserListings)
+    
+    // Also check what listings exist for the expected user ID
+    const expectedUserListings = await prismaClient.listing.findMany({
+      where: {
+        userId: 'user_32URkX2mcMZMyiw2j1r48KbMx4K'
+      },
+      select: {
+        id: true,
+        mode: true,
+        status: true,
+        createdAt: true
+      }
+    })
+    console.log(`🔍 Dashboard: Listings for expected user ID:`, expectedUserListings)
+    
   } catch (error) {
     console.error('❌ Dashboard: Error fetching listing count:', error)
   } finally {
