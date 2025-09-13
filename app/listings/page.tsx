@@ -3,27 +3,109 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { mockListings } from '@/lib/mockListings'
-import { Listing } from '@/types/exchange'
+
+interface DatabaseListing {
+  id: string
+  mode: 'HAVE' | 'WANT'
+  status: string
+  createdAt: string
+  asset?: {
+    id: string
+    title: string
+    description: string
+    type: string
+    estValueNumeric?: number
+    terms?: any
+  }
+  want?: {
+    id: string
+    title: string
+    description: string
+    category: string
+    targetValueNumeric?: number
+    constraints?: any
+  }
+  user: {
+    id: string
+    name?: string
+    email: string
+  }
+}
+
+interface Listing {
+  id: string
+  kind: 'HAVE' | 'WANT'
+  title: string
+  description: string
+  category?: string
+  packageType?: string
+  propertyType?: string
+  city?: string
+  state?: string
+  price?: number
+  noiAnnual?: number
+  sellerUrgency?: string
+  notes?: string
+  createdAt: string
+}
 
 export default function ListingsPage() {
   const [listings, setListings] = useState<Listing[]>([])
   const [filter, setFilter] = useState<'ALL' | 'HAVE' | 'WANT'>('ALL')
   const [loading, setLoading] = useState(true)
 
-  // Load listings from localStorage on mount
+  // Fetch listings from database
   useEffect(() => {
-    const storedListings = localStorage.getItem('levrx-listings')
-    if (storedListings) {
+    const fetchListings = async () => {
       try {
-        setListings(JSON.parse(storedListings))
+        console.log('🔍 Fetching listings from API...')
+        const response = await fetch('/api/listings')
+        console.log('🔍 API Response status:', response.status)
+        
+        if (response.ok) {
+          const data: DatabaseListing[] = await response.json()
+          console.log('🔍 Raw listings data:', data)
+          
+          // Transform database listings to frontend format
+          const transformedListings: Listing[] = data.map(listing => {
+            const isHave = listing.mode === 'HAVE'
+            const content = isHave ? listing.asset : listing.want
+            
+            return {
+              id: listing.id,
+              kind: listing.mode,
+              title: content?.title || 'Untitled',
+              description: content?.description || 'No description',
+              category: isHave ? listing.asset?.terms?.category : listing.want?.constraints?.category,
+              packageType: isHave ? listing.asset?.terms?.packageType : listing.want?.constraints?.packageType,
+              propertyType: isHave ? listing.asset?.terms?.propertyType : listing.want?.constraints?.propertyType,
+              city: isHave ? listing.asset?.terms?.city : listing.want?.constraints?.city,
+              state: isHave ? listing.asset?.terms?.state : listing.want?.constraints?.state,
+              price: isHave ? listing.asset?.estValueNumeric : listing.want?.targetValueNumeric,
+              noiAnnual: isHave ? listing.asset?.terms?.noiAnnual : listing.want?.constraints?.noiAnnual,
+              sellerUrgency: isHave ? listing.asset?.terms?.sellerUrgency : listing.want?.constraints?.sellerUrgency,
+              notes: isHave ? listing.asset?.terms?.notes : listing.want?.constraints?.notes,
+              createdAt: listing.createdAt
+            }
+          })
+          
+          console.log('🔍 Transformed listings:', transformedListings)
+          setListings(transformedListings)
+        } else {
+          console.error('❌ Failed to fetch listings:', response.status, response.statusText)
+          // Fall back to mock data
+          setListings(mockListings)
+        }
       } catch (error) {
-        console.error('Error parsing stored listings:', error)
+        console.error('❌ Error fetching listings:', error)
+        // Fall back to mock data
         setListings(mockListings)
+      } finally {
+        setLoading(false)
       }
-    } else {
-      setListings(mockListings)
     }
-    setLoading(false)
+
+    fetchListings()
   }, [])
 
   const filteredListings = listings.filter(listing => 
