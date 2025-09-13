@@ -95,15 +95,27 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       return NextResponse.json({ error: 'You can only delete your own listings' }, { status: 403 })
     }
 
-    // Delete the listing and associated asset/want
-    if (listing.assetId) {
-      await prismaClient.asset.delete({ where: { id: listing.assetId } })
+    console.log(`🗑️ DELETE: Starting deletion process for listing ${listingId}`)
+    console.log(`🗑️ DELETE: Listing has assetId: ${listing.assetId}, wantId: ${listing.wantId}`)
+
+    // Delete the listing first, then associated asset/want (in case of foreign key constraints)
+    try {
+      await prismaClient.listing.delete({ where: { id: listingId } })
+      console.log(`🗑️ DELETE: Successfully deleted listing ${listingId}`)
+      
+      // Then delete associated records
+      if (listing.assetId) {
+        await prismaClient.asset.delete({ where: { id: listing.assetId } })
+        console.log(`🗑️ DELETE: Successfully deleted asset ${listing.assetId}`)
+      }
+      if (listing.wantId) {
+        await prismaClient.want.delete({ where: { id: listing.wantId } })
+        console.log(`🗑️ DELETE: Successfully deleted want ${listing.wantId}`)
+      }
+    } catch (deleteError) {
+      console.error(`🗑️ DELETE ERROR: Failed to delete records:`, deleteError)
+      throw deleteError
     }
-    if (listing.wantId) {
-      await prismaClient.want.delete({ where: { id: listing.wantId } })
-    }
-    
-    await prismaClient.listing.delete({ where: { id: listingId } })
     
     await prismaClient.$disconnect()
     return NextResponse.json({ success: true, message: 'Listing deleted successfully' })

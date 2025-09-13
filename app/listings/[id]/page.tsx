@@ -137,25 +137,42 @@ export default function ListingDetail() {
   }
 
   const deleteListing = async () => {
-    if (!listing || !isOwner) return
+    console.log('🗑️ Frontend: Delete button clicked')
+    console.log('🗑️ Frontend: Listing:', listing)
+    console.log('🗑️ Frontend: IsOwner:', isOwner)
+    
+    if (!listing || !isOwner) {
+      console.log('🗑️ Frontend: Cannot delete - no listing or not owner')
+      return
+    }
     
     const confirmDelete = confirm('Are you sure you want to delete this listing? This action cannot be undone.')
-    if (!confirmDelete) return
+    if (!confirmDelete) {
+      console.log('🗑️ Frontend: User cancelled deletion')
+      return
+    }
     
     try {
+      console.log(`🗑️ Frontend: Making DELETE request to /api/listings/${listing.id}`)
       const response = await fetch(`/api/listings/${listing.id}`, {
         method: 'DELETE'
       })
       
+      console.log('🗑️ Frontend: Response status:', response.status)
+      console.log('🗑️ Frontend: Response ok:', response.ok)
+      
       if (response.ok) {
+        const data = await response.json()
+        console.log('🗑️ Frontend: Success response:', data)
         alert('Listing deleted successfully!')
         router.push('/listings')
       } else {
         const errorData = await response.json().catch(() => ({ error: 'Failed to parse error response' }))
+        console.error('🗑️ Frontend: Error response:', errorData)
         alert(`Failed to delete listing: ${errorData.error || 'Unknown error'}`)
       }
     } catch (error) {
-      console.error('Error deleting listing:', error)
+      console.error('🗑️ Frontend: Catch block error:', error)
       alert(`Error deleting listing: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
   }
