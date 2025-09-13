@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useUser } from '@clerk/nextjs'
+import { useUser, useAuth } from '@clerk/nextjs'
 import { mockListings } from '@/lib/mockListings'
 import { sampleListings, SampleListing } from '@/lib/sample-data'
 import { Listing, PackageType, PropertyType } from '@/src/types/exchange'
@@ -37,6 +37,7 @@ interface DatabaseListing {
 
 export default function ListingsPage() {
   const { isSignedIn, isLoaded } = useUser()
+  const { getToken } = useAuth()
   const [listings, setListings] = useState<Listing[]>([])
   const [filter, setFilter] = useState<'ALL' | 'HAVE' | 'WANT'>('ALL')
   const [loading, setLoading] = useState(true)
@@ -84,7 +85,13 @@ export default function ListingsPage() {
 
         // For authenticated users, fetch real data
         console.log('🔍 Fetching real listings from API for authenticated user...')
-        const response = await fetch('/api/listings')
+        const token = await getToken()
+        const response = await fetch('/api/listings', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        })
         console.log('🔍 API Response status:', response.status)
         
         if (response.ok) {
