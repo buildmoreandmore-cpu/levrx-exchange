@@ -25,15 +25,32 @@ export default async function Dashboard() {
   let activeListingsCount = 0
   try {
     // Get real listing count for current user
+    console.log(`🔍 Dashboard: Checking listings for user ID: ${user.id}`)
+    console.log(`🔍 Dashboard: User email: ${user.emailAddresses[0].emailAddress}`)
+    
     activeListingsCount = await prismaClient.listing.count({
       where: {
         userId: user.id,
         status: 'ACTIVE'
       }
     })
-    console.log(`📊 User ${user.id} has ${activeListingsCount} active listings`)
+    console.log(`📊 Dashboard: User ${user.id} has ${activeListingsCount} active listings`)
+    
+    // Also get all listings for debugging
+    const allUserListings = await prismaClient.listing.findMany({
+      where: {
+        userId: user.id
+      },
+      select: {
+        id: true,
+        mode: true,
+        status: true,
+        createdAt: true
+      }
+    })
+    console.log(`🔍 Dashboard: All listings for user:`, allUserListings)
   } catch (error) {
-    console.error('❌ Error fetching listing count:', error)
+    console.error('❌ Dashboard: Error fetching listing count:', error)
   } finally {
     await prismaClient.$disconnect()
   }
