@@ -3,11 +3,11 @@
 import { Inter } from "next/font/google"
 import Link from 'next/link'
 import { SignInButton, SignedIn, SignedOut } from '@clerk/nextjs'
-import Navbar from '@/components/layout/Navbar'
-import Footer from '@/components/layout/Footer'
-import TradeGrid from '@/components/landing/TradeGrid'
-import FAQ, { faqData } from '@/components/landing/FAQ'
-import LeadCapture from '@/components/landing/LeadCapture'
+import Navbar from '@/src/components/layout/Navbar'
+import Footer from '@/src/components/layout/Footer'
+import TradeGrid from '@/src/components/landing/TradeGrid'
+import FAQ, { faqData } from '@/src/components/landing/FAQ'
+import LeadCapture from '@/src/components/landing/LeadCapture'
 import CheckoutButton from '@/components/pricing/CheckoutButton'
 
 const inter = Inter({ subsets: ["latin"] })
