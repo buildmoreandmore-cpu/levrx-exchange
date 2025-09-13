@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { mockListings } from '@/lib/mockListings'
+import { Listing } from '@/types/exchange'
 
 interface DatabaseListing {
   id: string
@@ -32,23 +33,6 @@ interface DatabaseListing {
   }
 }
 
-interface Listing {
-  id: string
-  kind: 'HAVE' | 'WANT'
-  title: string
-  description: string
-  category?: string
-  packageType?: string
-  propertyType?: string
-  city?: string
-  state?: string
-  price?: number
-  noiAnnual?: number
-  sellerUrgency?: string
-  notes?: string
-  createdAt: string
-}
-
 export default function ListingsPage() {
   const [listings, setListings] = useState<Listing[]>([])
   const [filter, setFilter] = useState<'ALL' | 'HAVE' | 'WANT'>('ALL')
@@ -70,21 +54,23 @@ export default function ListingsPage() {
           const transformedListings: Listing[] = data.map(listing => {
             const isHave = listing.mode === 'HAVE'
             const content = isHave ? listing.asset : listing.want
+            const terms = isHave ? listing.asset?.terms : listing.want?.constraints
             
             return {
               id: listing.id,
               kind: listing.mode,
-              title: content?.title || 'Untitled',
-              description: content?.description || 'No description',
-              category: isHave ? listing.asset?.terms?.category : listing.want?.constraints?.category,
-              packageType: isHave ? listing.asset?.terms?.packageType : listing.want?.constraints?.packageType,
-              propertyType: isHave ? listing.asset?.terms?.propertyType : listing.want?.constraints?.propertyType,
-              city: isHave ? listing.asset?.terms?.city : listing.want?.constraints?.city,
-              state: isHave ? listing.asset?.terms?.state : listing.want?.constraints?.state,
+              packageType: terms?.packageType || 'Property',
+              propertyType: terms?.propertyType || 'Other',
+              city: terms?.city || 'Unknown',
+              state: terms?.state || 'Unknown',
               price: isHave ? listing.asset?.estValueNumeric : listing.want?.targetValueNumeric,
-              noiAnnual: isHave ? listing.asset?.terms?.noiAnnual : listing.want?.constraints?.noiAnnual,
-              sellerUrgency: isHave ? listing.asset?.terms?.sellerUrgency : listing.want?.constraints?.sellerUrgency,
-              notes: isHave ? listing.asset?.terms?.notes : listing.want?.constraints?.notes,
+              noiAnnual: terms?.noiAnnual,
+              currentDebt: terms?.currentDebt,
+              sellerUrgency: terms?.sellerUrgency || 'Low',
+              sellerReasons: terms?.sellerReasons || [],
+              benefitsSought: terms?.benefitsSought || [],
+              benefitsToNewOwner: terms?.benefitsToNewOwner || [],
+              notes: terms?.notes,
               createdAt: listing.createdAt
             }
           })
