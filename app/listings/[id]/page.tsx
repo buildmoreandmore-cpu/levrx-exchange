@@ -1,9 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { UserButton } from '@clerk/nextjs'
+import { UserButton, useUser } from '@clerk/nextjs'
 
 export const dynamic = 'force-dynamic'
 
@@ -53,10 +53,15 @@ interface Match {
 
 export default function ListingDetail() {
   const params = useParams()
+  const router = useRouter()
+  const { user } = useUser()
   const [listing, setListing] = useState<Listing | null>(null)
   const [matches, setMatches] = useState<Match[]>([])
   const [loading, setLoading] = useState(true)
   const [findingMatches, setFindingMatches] = useState(false)
+  
+  // Check if current user owns this listing
+  const isOwner = user && listing && user.id === listing.user.id
 
   useEffect(() => {
     fetchListing()
@@ -105,6 +110,30 @@ export default function ListingDetail() {
       alert(`Error finding matches: ${error instanceof Error ? error.message : 'Unknown error'}`)
     } finally {
       setFindingMatches(false)
+    }
+  }
+
+  const deleteListing = async () => {
+    if (!listing || !isOwner) return
+    
+    const confirmDelete = confirm('Are you sure you want to delete this listing? This action cannot be undone.')
+    if (!confirmDelete) return
+    
+    try {
+      const response = await fetch(`/api/listings/${listing.id}`, {
+        method: 'DELETE'
+      })
+      
+      if (response.ok) {
+        alert('Listing deleted successfully!')
+        router.push('/listings')
+      } else {
+        const errorData = await response.json().catch(() => ({ error: 'Failed to parse error response' }))
+        alert(`Failed to delete listing: ${errorData.error || 'Unknown error'}`)
+      }
+    } catch (error) {
+      console.error('Error deleting listing:', error)
+      alert(`Error deleting listing: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
   }
 
@@ -237,6 +266,25 @@ export default function ListingDetail() {
               >
                 Post Listing
               </Link>
+              
+              {/* Owner actions - only show if current user owns this listing */}
+              {isOwner && (
+                <>
+                  <Link 
+                    href={`/listings/${listing?.id}/edit`}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-medium transition-colors mb-3 block text-center"
+                  >
+                    Edit Listing
+                  </Link>
+                  
+                  <button
+                    onClick={deleteListing}
+                    className="w-full bg-red-600 hover:bg-red-700 text-white py-3 px-4 rounded-lg font-medium transition-colors mb-3"
+                  >
+                    Delete Listing
+                  </button>
+                </>
+              )}
               
               <button
                 onClick={findMatches}
