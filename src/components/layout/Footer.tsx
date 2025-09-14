@@ -69,17 +69,17 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+                <Link href="/careers" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
                   Careers
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+                <Link href="/contact" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
                   Contact
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+                <Link href="/blog" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
                   Blog
                 </Link>
               </li>
@@ -121,10 +121,10 @@ export default function Footer() {
               © 2025 LVRXchange. All rights reserved.
             </p>
             <div className="mt-4 md:mt-0 flex space-x-6">
-              <Link href="#" className="text-sm text-gray-500 hover:text-gray-600 transition-colors">
+              <Link href="/cookies" className="text-sm text-gray-500 hover:text-gray-600 transition-colors">
                 Cookie Settings
               </Link>
-              <Link href="#" className="text-sm text-gray-500 hover:text-gray-600 transition-colors">
+              <Link href="/sitemap" className="text-sm text-gray-500 hover:text-gray-600 transition-colors">
                 Sitemap
               </Link>
             </div>
