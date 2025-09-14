@@ -18,7 +18,7 @@ export async function GET(
     prismaClient = new PrismaClient({
       datasources: {
         db: {
-          url: "postgresql://postgres.utryyaxfodtpdlhssjlv:howyykAe9mU820op@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
+          url: process.env.DATABASE_URL
         }
       }
     })
@@ -78,7 +78,7 @@ export async function PUT(
     prismaClient = new PrismaClient({
       datasources: {
         db: {
-          url: "postgresql://postgres.utryyaxfodtpdlhssjlv:howyykAe9mU820op@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
+          url: process.env.DATABASE_URL
         }
       }
     })
@@ -209,7 +209,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     prismaClient = new PrismaClient({
       datasources: {
         db: {
-          url: "postgresql://postgres.utryyaxfodtpdlhssjlv:howyykAe9mU820op@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
+          url: process.env.DATABASE_URL
         }
       }
     })

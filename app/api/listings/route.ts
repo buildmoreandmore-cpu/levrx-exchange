@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     prismaClient = new PrismaClient({
       datasources: {
         db: {
-          url: "postgresql://postgres.utryyaxfodtpdlhssjlv:howyykAe9mU820op@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
+          url: process.env.DATABASE_URL
         }
       }
     })
@@ -71,16 +71,25 @@ export async function POST(request: NextRequest) {
 
     // Create user if doesn't exist
     console.log('🔍 Step 6: Creating/updating user in database')
-    await prismaClient.user.upsert({
-      where: { email: user.emailAddresses[0].emailAddress },
-      update: { name: `${user.firstName} ${user.lastName}`.trim() || null },
-      create: {
-        id: user.id,
-        email: user.emailAddresses[0].emailAddress,
-        name: `${user.firstName} ${user.lastName}`.trim() || null,
-      },
-    })
-    console.log('🔍 Step 7: User upsert completed successfully')
+    try {
+      await prismaClient.user.upsert({
+        where: { email: user.emailAddresses[0].emailAddress },
+        update: { name: `${user.firstName} ${user.lastName}`.trim() || null },
+        create: {
+          id: user.id,
+          email: user.emailAddresses[0].emailAddress,
+          name: `${user.firstName} ${user.lastName}`.trim() || null,
+        },
+      })
+      console.log('🔍 Step 7: User upsert completed successfully')
+    } catch (userError: any) {
+      console.error('❌ User upsert failed:', {
+        message: userError.message,
+        code: userError.code,
+        meta: userError.meta
+      })
+      throw new Error(`User upsert failed: ${userError.message}`)
+    }
 
     let assetId = null
     let wantId = null
@@ -201,12 +210,13 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
       errorType: error instanceof Error ? error.constructor.name : typeof error
     })
-    
+
     // Test database connection in catch block
     try {
       if (prismaClient) {
         await prismaClient.$queryRaw`SELECT 1`
         console.log('✅ Database connection is working in catch block')
+        await prismaClient.$disconnect()
       }
     } catch (dbError) {
       console.error('❌ Database connection failed in catch:', {
@@ -214,9 +224,11 @@ export async function POST(request: NextRequest) {
         stack: dbError instanceof Error ? dbError.stack : 'No DB stack trace'
       })
     }
-    
+
+    // Return more specific error message
+    const errorMessage = error instanceof Error ? error.message : 'Internal server error - General catch block'
     return NextResponse.json(
-      { success: false, error: 'Internal server error - General catch block' },
+      { success: false, error: errorMessage },
       { status: 500 }
     )
   }
@@ -235,7 +247,7 @@ export async function GET(request: NextRequest) {
     prismaClient = new PrismaClient({
       datasources: {
         db: {
-          url: "postgresql://postgres.utryyaxfodtpdlhssjlv:howyykAe9mU820op@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
+          url: process.env.DATABASE_URL
         }
       }
     })
