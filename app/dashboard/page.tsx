@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { UserButton } from '@clerk/nextjs'
 import { currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic'
 
@@ -22,17 +22,8 @@ export default async function Dashboard() {
       userName: user.firstName + ' ' + user.lastName
     })
     
-    // Create fresh Prisma client to avoid connection issues
-    const prismaClient = new PrismaClient({
-      datasources: {
-        db: {
-          url: "postgresql://postgres.utryyaxfodtpdlhssjlv:howyykAe9mU820op@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
-        }
-      }
-    })
-    
     // First, let's see all listings in the database
-    const allListings = await prismaClient.listing.findMany({
+    const allListings = await prisma.listing.findMany({
       include: {
         user: { select: { id: true, email: true, name: true } }
       }
@@ -47,18 +38,16 @@ export default async function Dashboard() {
         mode: listing.mode
       })
     })
-    
+
     // Get real listing count for current user
-    activeListingsCount = await prismaClient.listing.count({
+    activeListingsCount = await prisma.listing.count({
       where: {
         userId: user.id,
         status: 'ACTIVE'
       }
     })
-    
+
     console.log('🔍 Dashboard: Active listings count for current user:', activeListingsCount)
-    
-    await prismaClient.$disconnect()
     
   } catch (error) {
     console.error('❌ Dashboard: Error fetching listing count:', error)
