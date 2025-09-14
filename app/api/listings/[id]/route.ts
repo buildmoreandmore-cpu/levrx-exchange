@@ -55,6 +55,141 @@ export async function GET(
   }
 }
 
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  let prismaClient: PrismaClient | null = null
+
+  try {
+    const user = await currentUser()
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const formData = await request.json()
+    const listingId = params.id
+
+    if (!listingId) {
+      return NextResponse.json({ error: 'Listing ID is required' }, { status: 400 })
+    }
+
+    // Create fresh Prisma client
+    prismaClient = new PrismaClient({
+      datasources: {
+        db: {
+          url: "postgresql://postgres.utryyaxfodtpdlhssjlv:howyykAe9mU820op@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
+        }
+      }
+    })
+
+    // First verify the listing exists and belongs to the user
+    const existingListing = await prismaClient.listing.findUnique({
+      where: { id: listingId },
+      include: { asset: true, want: true, user: true }
+    })
+
+    if (!existingListing) {
+      await prismaClient.$disconnect()
+      return NextResponse.json({ error: 'Listing not found' }, { status: 404 })
+    }
+
+    if (existingListing.userId !== user.id) {
+      await prismaClient.$disconnect()
+      return NextResponse.json({ error: 'You can only edit your own listings' }, { status: 403 })
+    }
+
+    // Prepare update data based on listing mode
+    const isHave = formData.kind === 'HAVE'
+    const item = isHave ? existingListing.asset : existingListing.want
+
+    if (isHave && existingListing.asset) {
+      // Update asset
+      await prismaClient.asset.update({
+        where: { id: existingListing.asset.id },
+        data: {
+          title: formData.title,
+          description: formData.description,
+          type: formData.category,
+          estValueNumeric: formData.price,
+          terms: {
+            packageType: formData.packageType,
+            propertyType: formData.propertyType,
+            city: formData.city,
+            state: formData.state,
+            noiAnnual: formData.noiAnnual,
+            currentDebt: formData.currentDebt,
+            sellerUrgency: formData.sellerUrgency,
+            sellerReasons: formData.sellerReasons,
+            benefitsSought: formData.benefitsSought,
+            benefitsToNewOwner: formData.benefitsToNewOwner,
+            dealStructure: formData.dealStructure,
+            timeline: formData.timeline,
+            notes: formData.notes,
+          }
+        }
+      })
+    } else if (!isHave && existingListing.want) {
+      // Update want
+      await prismaClient.want.update({
+        where: { id: existingListing.want.id },
+        data: {
+          title: formData.title,
+          description: formData.description,
+          category: formData.category,
+          targetValueNumeric: formData.price,
+          constraints: {
+            packageType: formData.packageType,
+            propertyType: formData.propertyType,
+            city: formData.city,
+            state: formData.state,
+            noiAnnual: formData.noiAnnual,
+            currentDebt: formData.currentDebt,
+            sellerUrgency: formData.sellerUrgency,
+            sellerReasons: formData.sellerReasons,
+            benefitsSought: formData.benefitsSought,
+            benefitsToNewOwner: formData.benefitsToNewOwner,
+            dealStructure: formData.dealStructure,
+            timeline: formData.timeline,
+            notes: formData.notes,
+          }
+        }
+      })
+    }
+
+    // Update listing mode if changed
+    if (existingListing.mode !== formData.kind) {
+      await prismaClient.listing.update({
+        where: { id: listingId },
+        data: { mode: formData.kind }
+      })
+    }
+
+    // Fetch and return updated listing
+    const updatedListing = await prismaClient.listing.findUnique({
+      where: { id: listingId },
+      include: {
+        asset: true,
+        want: true,
+        user: {
+          select: { id: true, name: true, email: true }
+        }
+      }
+    })
+
+    await prismaClient.$disconnect()
+    return NextResponse.json({ success: true, listing: updatedListing })
+
+  } catch (error) {
+    console.error('Error updating listing:', error)
+    if (prismaClient) await prismaClient.$disconnect()
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
+  }
+}
+
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   let prismaClient: PrismaClient | null = null
   
