@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { currentUser } from '@clerk/nextjs/server'
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '@/lib/prisma'
 import { anthropic, buildMatchRationalePrompt, buildDealStructuresPrompt } from '@/lib/anthropic'
 import { mockHaves, mockWants } from '@/lib/mockListings'
 
@@ -63,13 +63,6 @@ export async function GET() {
     // For authenticated users, return real matches
     console.log('🔍 Fetching real matches for authenticated user:', user.id)
     
-    const prisma = new PrismaClient({
-      datasources: {
-        db: {
-          url: "postgresql://postgres.utryyaxfodtpdlhssjlv:howyykAe9mU820op@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
-        }
-      }
-    })
     
     const matches = await prisma.match.findMany({
       where: {
@@ -99,7 +92,6 @@ export async function GET() {
 
     console.log('📊 Found real matches for user:', matches.length)
     
-    await prisma.$disconnect()
     return NextResponse.json(matches)
   } catch (error) {
     console.error('Error fetching matches:', error)
@@ -119,13 +111,6 @@ export async function POST(request: NextRequest) {
 
     const { listingId } = await request.json()
 
-    const prisma = new PrismaClient({
-      datasources: {
-        db: {
-          url: "postgresql://postgres.utryyaxfodtpdlhssjlv:howyykAe9mU820op@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
-        }
-      }
-    })
 
     const listing = await prisma.listing.findUnique({
       where: { id: listingId },
@@ -278,7 +263,6 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    await prisma.$disconnect()
     return NextResponse.json(matches)
   } catch (error) {
     console.error('Error finding matches:', error)
