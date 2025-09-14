@@ -13,6 +13,7 @@
     "@anthropic-ai/sdk": "^0.60.0",
     "@clerk/nextjs": "^6.31.4",
     "@clerk/themes": "^2.4.13",
+    "@headlessui/react": "^2.2.8",
     "@prisma/client": "^6.14.0",
     "@stripe/stripe-js": "^7.9.0",
     "@supabase/supabase-js": "^2.56.0",

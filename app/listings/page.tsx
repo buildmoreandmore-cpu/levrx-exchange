@@ -6,6 +6,7 @@ import { useUser, useAuth } from '@clerk/nextjs'
 import { mockListings } from '@/lib/mockListings'
 import { sampleListings, SampleListing } from '@/lib/sample-data'
 import { Listing, PackageType, PropertyType } from '@/src/types/exchange'
+import SampleListingModal from '@/src/components/ui/SampleListingModal'
 
 interface DatabaseListing {
   id: string
@@ -41,6 +42,7 @@ export default function ListingsPage() {
   const [listings, setListings] = useState<Listing[]>([])
   const [filter, setFilter] = useState<'ALL' | 'HAVE' | 'WANT'>('ALL')
   const [loading, setLoading] = useState(true)
+  const [showSampleModal, setShowSampleModal] = useState(false)
 
   // Convert sample listings to the format expected by the component
   const convertSampleListings = (sampleListings: SampleListing[]): Listing[] => {
@@ -148,6 +150,15 @@ export default function ListingsPage() {
 
   const haveCount = listings.filter(l => l.kind === 'HAVE').length
   const wantCount = listings.filter(l => l.kind === 'WANT').length
+
+  // Handle view details click for sample listings
+  const handleViewDetails = (listingId: string, e: React.MouseEvent) => {
+    if (!isSignedIn) {
+      e.preventDefault()
+      setShowSampleModal(true)
+    }
+    // For signed in users, let the Link navigate normally
+  }
 
   if (loading) {
     return (
@@ -331,8 +342,9 @@ export default function ListingsPage() {
                       {new Date(listing.createdAt).toLocaleDateString()}
                     </span>
                   </div>
-                  <Link 
+                  <Link
                     href={`/listings/${listing.id}`}
+                    onClick={(e) => handleViewDetails(listing.id, e)}
                     className="text-indigo-600 hover:text-indigo-800 font-medium text-sm"
                   >
                     View Details →
@@ -405,6 +417,12 @@ export default function ListingsPage() {
           </div>
         </div>
         )}
+
+        {/* Sample Listing Modal */}
+        <SampleListingModal
+          isOpen={showSampleModal}
+          onClose={() => setShowSampleModal(false)}
+        />
       </div>
     </div>
   )
