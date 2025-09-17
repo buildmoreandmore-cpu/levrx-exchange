@@ -186,13 +186,14 @@ export async function POST(request: NextRequest) {
         if (listing.mode === 'HAVE' && potentialMatch.mode === 'WANT') {
           const assetType = listing.asset?.type
           const wantCategory = potentialMatch.want?.category
-          
+
           if (
-            (assetType === 'EQUITY' && wantCategory === 'PARTNER') ||
-            (assetType === 'CASHFLOW' && wantCategory === 'CASH') ||
-            (assetType === 'EQUIPMENT' && wantCategory === 'EQUIPMENT') ||
-            (assetType === 'CREDIT' && wantCategory === 'CASH') ||
-            (assetType === 'SKILL' && wantCategory === 'PARTNER')
+            (assetType === 'EQUITY' && wantCategory === 'BUYER') ||     // Property HAVE ↔ Property WANT
+            (assetType === 'EQUITY' && wantCategory === 'PARTNER') ||   // Property HAVE ↔ Partnership WANT
+            (assetType === 'CASHFLOW' && wantCategory === 'CASH') ||    // Cash HAVE ↔ Cash WANT
+            (assetType === 'EQUIPMENT' && wantCategory === 'EQUIPMENT') || // Stuff HAVE ↔ Stuff WANT
+            (assetType === 'CREDIT' && wantCategory === 'CASH') ||      // Paper HAVE ↔ Cash WANT
+            (assetType === 'SKILL' && wantCategory === 'PARTNER')       // Skill HAVE ↔ Partnership WANT
           ) {
             ruleScore += 0.3
           }
@@ -201,7 +202,7 @@ export async function POST(request: NextRequest) {
         // For MVP, use rule-based score (in production, would include embeddings)
         const score = Math.min(ruleScore, 1.0)
 
-        if (score > 0.6) { // Only create matches above threshold
+        if (score > 0.5) { // Only create matches above threshold (lowered for testing)
           // Generate AI rationale and deal structures
           let rationale = ''
           let suggestedStructures = null
