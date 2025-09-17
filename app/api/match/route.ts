@@ -165,6 +165,7 @@ export async function POST(request: NextRequest) {
         if (existingMatch) {
           matches.push({
             ...existingMatch,
+            listingA: listing,
             listingB: potentialMatch,
           })
           continue
@@ -256,6 +257,7 @@ export async function POST(request: NextRequest) {
 
           matches.push({
             ...match,
+            listingA: listing,
             listingB: potentialMatch,
           })
         }
