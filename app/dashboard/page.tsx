@@ -39,15 +39,14 @@ export default async function Dashboard() {
       })
     })
 
-    // Get real listing count for current user
+    // Get count of ALL active listings in the marketplace
     activeListingsCount = await prisma.listing.count({
       where: {
-        userId: user.id,
         status: 'ACTIVE'
       }
     })
 
-    console.log('🔍 Dashboard: Active listings count for current user:', activeListingsCount)
+    console.log('🔍 Dashboard: Total active listings in marketplace:', activeListingsCount)
     
   } catch (error) {
     console.error('❌ Dashboard: Error fetching listing count:', error)
@@ -120,7 +119,7 @@ export default async function Dashboard() {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-500">Active Listings</p>
+                    <p className="text-sm font-medium text-gray-500">All Active Listings</p>
                     <p className="text-3xl font-bold text-gray-900">{activeListingsCount}</p>
                   </div>
                 </div>
