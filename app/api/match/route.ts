@@ -219,12 +219,17 @@ export async function POST(request: NextRequest) {
         }
 
         // Geographic proximity bonus
+        const getLocationFromTerms = (terms: any) => {
+          if (!terms || typeof terms !== 'object') return null
+          return terms.state || terms.geography
+        }
+
         const listingLocation = listing.mode === 'HAVE'
-          ? listing.asset?.terms?.state || listing.asset?.terms?.geography
-          : listing.want?.constraints?.state || listing.want?.constraints?.geography
+          ? getLocationFromTerms(listing.asset?.terms)
+          : getLocationFromTerms(listing.want?.constraints)
         const matchLocation = potentialMatch.mode === 'HAVE'
-          ? potentialMatch.asset?.terms?.state || potentialMatch.asset?.terms?.geography
-          : potentialMatch.want?.constraints?.state || potentialMatch.want?.constraints?.geography
+          ? getLocationFromTerms(potentialMatch.asset?.terms)
+          : getLocationFromTerms(potentialMatch.want?.constraints)
 
         if (listingLocation && matchLocation) {
           if (listingLocation.toLowerCase() === matchLocation.toLowerCase()) {
