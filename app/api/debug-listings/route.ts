@@ -1,83 +1,58 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { currentUser } from '@clerk/nextjs/server'
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '@/lib/prisma'
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const user = await currentUser()
+
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const prismaClient = new PrismaClient({
-      datasources: {
-        db: {
-          url: "postgresql://postgres.utryyaxfodtpdlhssjlv:howyykAe9mU820op@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
-        }
-      }
-    })
+    console.log('🔍 Debug: Checking all listings for user:', user.id)
 
-    // Get current user info
-    const currentUserInfo = {
-      id: user.id,
-      email: user.emailAddresses[0]?.emailAddress,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      fullName: user.fullName
-    }
-
-    // Get all users in database
-    const allUsersInDb = await prismaClient.user.findMany({
-      select: { id: true, email: true, name: true }
-    })
-
-    // Get all listings in database
-    const allListings = await prismaClient.listing.findMany({
-      include: {
-        user: { select: { id: true, email: true, name: true } },
-        asset: { select: { id: true, title: true } },
-        want: { select: { id: true, title: true } }
-      }
-    })
-
-    // Get listings for current user
-    const userListings = await prismaClient.listing.findMany({
+    // Get ALL listings for this user (ignore status filter)
+    const allListings = await prisma.listing.findMany({
       where: { userId: user.id },
       include: {
-        user: { select: { id: true, email: true, name: true } },
-        asset: { select: { id: true, title: true } },
-        want: { select: { id: true, title: true } }
-      }
+        asset: true,
+        want: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
     })
 
-    // Get active listings count for current user
-    const activeListingsCount = await prismaClient.listing.count({
-      where: {
-        userId: user.id,
-        status: 'ACTIVE'
-      }
-    })
+    console.log('🔍 Debug: Found listings:', allListings.length)
 
-    await prismaClient.$disconnect()
+    // Also check user exists
+    const userRecord = await prisma.user.findUnique({
+      where: { id: user.id }
+    })
 
     return NextResponse.json({
-      success: true,
-      debug: {
-        currentUser: currentUserInfo,
-        allUsersInDb: allUsersInDb,
-        allListings: allListings,
-        userListings: userListings,
-        activeListingsCount: activeListingsCount,
-        totalListingsInDb: allListings.length,
-        totalUsersInDb: allUsersInDb.length
-      }
+      debug: true,
+      user: {
+        clerkId: user.id,
+        email: user.emailAddresses[0]?.emailAddress,
+        dbRecord: userRecord
+      },
+      listings: allListings,
+      count: allListings.length,
+      statuses: allListings.map(l => ({ id: l.id, status: l.status, mode: l.mode }))
     })
 
   } catch (error) {
-    console.error('Debug API Error:', error)
+    console.error('🔍 Debug error:', error)
     return NextResponse.json({
-      error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      error: 'Debug failed',
+      details: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 })
   }
 }
