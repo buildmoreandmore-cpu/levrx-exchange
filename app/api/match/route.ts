@@ -145,7 +145,7 @@ export async function POST(request: NextRequest) {
           },
         },
       },
-      take: 10,
+      take: 50, // Increased to check more potential matches
     })
 
     const matches = []
@@ -181,13 +181,14 @@ export async function POST(request: NextRequest) {
           : `${potentialMatch.want?.title}: ${potentialMatch.want?.description}`
 
         // Simple rule-based matching for MVP
-        let ruleScore = 0.5 // Base score
+        let ruleScore = 0.6 // Base score (increased for easier matching)
 
         // Category matching
         if (listing.mode === 'HAVE' && potentialMatch.mode === 'WANT') {
           const assetType = listing.asset?.type
           const wantCategory = potentialMatch.want?.category
 
+          // Primary category matches (strong compatibility)
           if (
             (assetType === 'EQUITY' && wantCategory === 'BUYER') ||     // Property HAVE ↔ Property WANT
             (assetType === 'EQUITY' && wantCategory === 'PARTNER') ||   // Property HAVE ↔ Partnership WANT
@@ -196,14 +197,77 @@ export async function POST(request: NextRequest) {
             (assetType === 'CREDIT' && wantCategory === 'CASH') ||      // Paper HAVE ↔ Cash WANT
             (assetType === 'SKILL' && wantCategory === 'PARTNER')       // Skill HAVE ↔ Partnership WANT
           ) {
-            ruleScore += 0.3
+            ruleScore += 0.25
+          }
+
+          // Secondary category matches (cross-category opportunities)
+          else if (
+            (assetType === 'CREDIT' && wantCategory === 'BUYER') ||     // Paper HAVE ↔ Property WANT
+            (assetType === 'CASHFLOW' && wantCategory === 'BUYER') ||   // Cash HAVE ↔ Property WANT
+            (assetType === 'EQUITY' && wantCategory === 'CASH') ||      // Property HAVE ↔ Cash WANT
+            (assetType === 'CREDIT' && wantCategory === 'PARTNER') ||   // Paper HAVE ↔ Partnership WANT
+            (assetType === 'CASHFLOW' && wantCategory === 'PARTNER') || // Cash HAVE ↔ Partnership WANT
+            (assetType === 'EQUIPMENT' && wantCategory === 'CASH')      // Stuff HAVE ↔ Cash WANT
+          ) {
+            ruleScore += 0.15
+          }
+
+          // Wild card bonus for ANY category with OTHER
+          else if (wantCategory === 'OTHER' || assetType === 'OTHER') {
+            ruleScore += 0.1
+          }
+        }
+
+        // Geographic proximity bonus
+        const listingLocation = listing.mode === 'HAVE'
+          ? listing.asset?.terms?.state || listing.asset?.terms?.geography
+          : listing.want?.constraints?.state || listing.want?.constraints?.geography
+        const matchLocation = potentialMatch.mode === 'HAVE'
+          ? potentialMatch.asset?.terms?.state || potentialMatch.asset?.terms?.geography
+          : potentialMatch.want?.constraints?.state || potentialMatch.want?.constraints?.geography
+
+        if (listingLocation && matchLocation) {
+          if (listingLocation.toLowerCase() === matchLocation.toLowerCase()) {
+            ruleScore += 0.1 // Same state bonus
+          } else {
+            // Neighboring states bonus (simplified US geography)
+            const neighboringStates = {
+              'ga': ['fl', 'al', 'tn', 'nc', 'sc'],
+              'fl': ['ga', 'al'],
+              'al': ['ga', 'fl', 'tn', 'ms'],
+              'nc': ['ga', 'tn', 'va', 'sc'],
+              'sc': ['ga', 'nc'],
+              'tn': ['ga', 'al', 'nc', 'va', 'ky', 'ms', 'ar', 'mo'],
+            }
+            const state1 = listingLocation.toLowerCase()
+            const state2 = matchLocation.toLowerCase()
+            if (neighboringStates[state1]?.includes(state2) || neighboringStates[state2]?.includes(state1)) {
+              ruleScore += 0.05 // Neighboring state bonus
+            }
+          }
+        }
+
+        // Price range compatibility bonus
+        const listingValue = listing.mode === 'HAVE'
+          ? listing.asset?.estValueNumeric
+          : listing.want?.targetValueNumeric
+        const matchValue = potentialMatch.mode === 'HAVE'
+          ? potentialMatch.asset?.estValueNumeric
+          : potentialMatch.want?.targetValueNumeric
+
+        if (listingValue && matchValue) {
+          const ratio = Math.min(listingValue, matchValue) / Math.max(listingValue, matchValue)
+          if (ratio >= 0.8) {
+            ruleScore += 0.1 // Very close price range
+          } else if (ratio >= 0.5) {
+            ruleScore += 0.05 // Reasonable price range overlap
           }
         }
 
         // For MVP, use rule-based score (in production, would include embeddings)
         const score = Math.min(ruleScore, 1.0)
 
-        if (score > 0.5) { // Only create matches above threshold (lowered for testing)
+        if (score >= 0.4) { // Only create matches above threshold (lowered to 40% for easier matching)
           // Generate AI rationale and deal structures
           let rationale = ''
           let suggestedStructures = null
