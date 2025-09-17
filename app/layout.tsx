@@ -15,6 +15,11 @@ export const metadata: Metadata = {
   description:
     "Leverage what you have to get what you want. A marketplace where assets and opportunities find each other, powered by AI.",
   generator: "v0.app",
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+  },
 };
 
 export default function RootLayout({

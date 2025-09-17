@@ -122,7 +122,7 @@ export default function MatchesPage() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+      <main className="max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-8 pb-8">
         <div className="mb-6 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
             {isSignedIn ? 'Your Matches' : 'Demo Matches'}
@@ -158,9 +158,9 @@ export default function MatchesPage() {
             </Link>
           </div>
         ) : (
-          <div className="space-y-4 sm:space-y-6">
+          <div className="space-y-3 sm:space-y-6">
             {matches.map((match) => (
-              <div key={match.id} className="bg-white rounded-lg shadow-sm border p-4 sm:p-6">
+              <div key={match.id} className="bg-white rounded-lg shadow-sm border p-3 sm:p-6">
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4 space-y-2 sm:space-y-0">
                   <div className="flex items-center space-x-2">
                     <div className="w-3 h-3 bg-green-500 rounded-full"></div>
@@ -240,16 +240,16 @@ export default function MatchesPage() {
                   <div className="text-xs sm:text-sm text-gray-500">
                     {match.suggestedStructures?.length || 0} suggested deal structures
                   </div>
-                  <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+                  <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-row sm:space-y-0 sm:space-x-3">
                     <Link
                       href={`/matches/${match.id}/message`}
-                      className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium text-center transition-colors"
+                      className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-3 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium text-center transition-colors"
                     >
                       Message
                     </Link>
                     <Link
                       href={`/matches/${match.id}/agreement`}
-                      className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium text-center transition-colors"
+                      className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-3 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium text-center transition-colors"
                     >
                       Draft Agreement
                     </Link>
