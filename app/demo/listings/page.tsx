@@ -121,12 +121,6 @@ export default function DemoListings() {
                     {new Date(listing.createdAt).toLocaleDateString()}
                   </span>
                 </div>
-                <Link 
-                  href={`/demo/listings/${listing.id}`}
-                  className="text-indigo-600 hover:text-indigo-800 font-medium text-sm"
-                >
-                  View Details →
-                </Link>
               </div>
 
               <h3 className="text-xl font-semibold text-gray-900 mb-3">{listing.title}</h3>

@@ -142,9 +142,6 @@ export default function DemoMatches() {
                     </span>
                   </div>
                 </div>
-                <button className="text-indigo-600 hover:text-indigo-800 font-medium text-sm">
-                  View Details →
-                </button>
               </div>
 
               {/* Matched Listings */}
