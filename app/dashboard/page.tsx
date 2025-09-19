@@ -129,12 +129,13 @@ export default async function Dashboard() {
                 <h1 className="text-4xl font-bold text-gray-900">
                   Welcome back, {userName}!
                 </h1>
-                {dbUser?.userType && (
+{/* TODO: Re-enable user type badge after database migration */}
+                {/* {dbUser?.userType && (
                   <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${USER_TYPE_LABELS[dbUser.userType as keyof typeof USER_TYPE_LABELS]?.color}`}>
                     <span className="mr-1">{USER_TYPE_LABELS[dbUser.userType as keyof typeof USER_TYPE_LABELS]?.icon}</span>
                     {USER_TYPE_LABELS[dbUser.userType as keyof typeof USER_TYPE_LABELS]?.label}
                   </span>
-                )}
+                )} */}
               </div>
               <p className="text-lg text-gray-600">Ready to find your next opportunity?</p>
             </div>
