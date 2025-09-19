@@ -1,7 +1,7 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
-import { currentUser } from '@clerk/nextjs/server'
-import { prisma } from '@/lib/prisma'
+// import { currentUser } from '@clerk/nextjs/server'
+// import { prisma } from '@/lib/prisma'
 
 const isProtectedRoute = createRouteMatcher([
   '/dashboard(.*)',
@@ -31,6 +31,9 @@ export default clerkMiddleware(async (auth, request) => {
     try {
       await auth.protect()
 
+      // TODO: Re-enable onboarding check after database schema migration
+      // Temporarily disabled to prevent middleware failures
+      /*
       // Check if user needs onboarding (skip for API routes to prevent loops)
       if (!request.nextUrl.pathname.startsWith('/api/')) {
         const user = await currentUser()
@@ -55,6 +58,7 @@ export default clerkMiddleware(async (auth, request) => {
           }
         }
       }
+      */
     } catch (error) {
       // Return proper 401 instead of 404 redirect for API routes
       if (request.nextUrl.pathname.startsWith('/api/')) {
