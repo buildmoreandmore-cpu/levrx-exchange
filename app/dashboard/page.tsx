@@ -6,12 +6,31 @@ import { prisma } from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic'
 
+const USER_TYPE_LABELS = {
+  INVESTOR: { label: 'Real Estate Investor', icon: '🏢', color: 'bg-blue-100 text-blue-800' },
+  LENDER: { label: 'Private Money Lender', icon: '💰', color: 'bg-green-100 text-green-800' },
+  WHOLESALER: { label: 'Wholesaler', icon: '🤝', color: 'bg-purple-100 text-purple-800' },
+  REALTOR: { label: 'Realtor', icon: '🏡', color: 'bg-orange-100 text-orange-800' },
+  SELLER: { label: 'Property Seller', icon: '📋', color: 'bg-red-100 text-red-800' },
+  OTHER: { label: 'Other', icon: '👤', color: 'bg-gray-100 text-gray-800' }
+}
+
 export default async function Dashboard() {
   const user = await currentUser()
-  
+
   if (!user) {
     redirect('/sign-in')
   }
+
+  // Get user data from database
+  const dbUser = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: {
+      userType: true,
+      businessDescription: true,
+      onboardingCompleted: true
+    }
+  })
 
   let activeListingsCount = 0
   
@@ -97,10 +116,18 @@ export default async function Dashboard() {
             <div className="w-16 h-16 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg">
               {userInitials}
             </div>
-            <div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">
-                Welcome back, {userName}!
-              </h1>
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-2">
+                <h1 className="text-4xl font-bold text-gray-900">
+                  Welcome back, {userName}!
+                </h1>
+                {dbUser?.userType && (
+                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${USER_TYPE_LABELS[dbUser.userType as keyof typeof USER_TYPE_LABELS]?.color}`}>
+                    <span className="mr-1">{USER_TYPE_LABELS[dbUser.userType as keyof typeof USER_TYPE_LABELS]?.icon}</span>
+                    {USER_TYPE_LABELS[dbUser.userType as keyof typeof USER_TYPE_LABELS]?.label}
+                  </span>
+                )}
+              </div>
               <p className="text-lg text-gray-600">Ready to find your next opportunity?</p>
             </div>
           </div>

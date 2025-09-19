@@ -20,6 +20,15 @@ enum KycStatus {
   REJECTED
 }
 
+enum UserType {
+  INVESTOR
+  LENDER
+  WHOLESALER
+  REALTOR
+  SELLER
+  OTHER
+}
+
 enum AssetType {
   EQUITY
   CASHFLOW
@@ -56,19 +65,32 @@ enum AgreementStatus {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  role      Role     @default(USER)
-  createdAt DateTime @default(now())
-  
+  id                    String    @id @default(cuid())
+  email                 String    @unique
+  name                  String?
+  role                  Role      @default(USER)
+  createdAt             DateTime  @default(now())
+
+  // Onboarding fields
+  onboardingCompleted   Boolean   @default(false)
+  userType              UserType?
+  businessDescription   String?
+  yearsExperience       Int?
+  monthlyDealsVolume    Int?
+  investmentRange       String?
+  focusAreas            Json?     // Array of focus areas
+  linkedInProfile       String?
+  companyWebsite        String?
+  phoneNumber           String?
+  referralSource        String?
+
   // Relations
-  profile           Profile?
-  assets            Asset[]
-  wants             Want[]
-  listings          Listing[]
-  sentMessages      Message[]       @relation("SentMessages")
-  agreementDrafts   AgreementDraft[]
+  profile               Profile?
+  assets                Asset[]
+  wants                 Want[]
+  listings              Listing[]
+  sentMessages          Message[] @relation("SentMessages")
+  agreementDrafts       AgreementDraft[]
 
   @@map("users")
 }
@@ -94,12 +116,13 @@ model Asset {
   description      String
   estValueNumeric  Float?
   terms            Json?
+  photos           Json?       // Array of photo URLs
   createdAt        DateTime    @default(now())
-  
+
   // Relations
   user             User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   listings         Listing[]
-  
+
   @@map("assets")
 }
 
@@ -111,12 +134,13 @@ model Want {
   description       String
   targetValueNumeric Float?
   constraints       Json?
+  photos            Json?        // Array of photo URLs
   createdAt         DateTime     @default(now())
-  
+
   // Relations
   user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   listings          Listing[]
-  
+
   @@map("wants")
 }
 
