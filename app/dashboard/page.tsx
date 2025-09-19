@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { UserButton } from '@clerk/nextjs'
 import { currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
-import { prisma } from '@/lib/prisma'
+// import { prisma } from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic'
 
@@ -22,6 +22,9 @@ export default async function Dashboard() {
     redirect('/sign-in')
   }
 
+  // TODO: Re-enable database calls after schema migration
+  // Temporarily disabled to prevent runtime errors
+  /*
   // Get user data from database
   const dbUser = await prisma.user.findUnique({
     where: { id: user.id },
@@ -31,16 +34,20 @@ export default async function Dashboard() {
       onboardingCompleted: true
     }
   })
+  */
+  const dbUser = null // Temporary placeholder
 
   let activeListingsCount = 0
-  
+
+  // TODO: Re-enable listing queries after database migration
+  /*
   try {
     console.log('🔍 Dashboard: Checking listings for user:', {
       userId: user.id,
       userEmail: user.emailAddresses[0]?.emailAddress,
       userName: user.firstName + ' ' + user.lastName
     })
-    
+
     // First, let's see all listings in the database
     const allListings = await prisma.listing.findMany({
       include: {
@@ -66,11 +73,12 @@ export default async function Dashboard() {
     })
 
     console.log('🔍 Dashboard: Total active listings in marketplace:', activeListingsCount)
-    
+
   } catch (error) {
     console.error('❌ Dashboard: Error fetching listing count:', error)
     activeListingsCount = 0
   }
+  */
 
   const userName = user.firstName || user.username || user.emailAddresses[0].emailAddress.split('@')[0]
   const userInitials = user.firstName 
