@@ -36,15 +36,22 @@ export default clerkMiddleware(async (auth, request) => {
         const user = await currentUser()
 
         if (user && !url.pathname.includes('/onboarding')) {
-          // Check if user has completed onboarding
-          const dbUser = await prisma.user.findUnique({
-            where: { id: user.id },
-            select: { onboardingCompleted: true }
-          })
+          try {
+            // Check if user has completed onboarding
+            const dbUser = await prisma.user.findUnique({
+              where: { id: user.id },
+              select: { onboardingCompleted: true }
+            })
 
-          // If user doesn't exist in DB or hasn't completed onboarding, redirect to onboarding
-          if (!dbUser || !dbUser.onboardingCompleted) {
-            return NextResponse.redirect(new URL('/onboarding', request.url))
+            // If user doesn't exist in DB or hasn't completed onboarding, redirect to onboarding
+            if (!dbUser || !dbUser.onboardingCompleted) {
+              return NextResponse.redirect(new URL('/onboarding', request.url))
+            }
+          } catch (dbError) {
+            // If database is not available or schema not migrated, allow access
+            // This prevents the middleware from breaking the entire site
+            console.error('Database error in middleware:', dbError)
+            // Continue without blocking the user
           }
         }
       }
