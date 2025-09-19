@@ -20,14 +20,14 @@ enum KycStatus {
   REJECTED
 }
 
-enum UserType {
-  INVESTOR
-  LENDER
-  WHOLESALER
-  REALTOR
-  SELLER
-  OTHER
-}
+// enum UserType {
+//   INVESTOR
+//   LENDER
+//   WHOLESALER
+//   REALTOR
+//   SELLER
+//   OTHER
+// }
 
 enum AssetType {
   EQUITY
@@ -65,32 +65,19 @@ enum AgreementStatus {
 }
 
 model User {
-  id                    String    @id @default(cuid())
-  email                 String    @unique
-  name                  String?
-  role                  Role      @default(USER)
-  createdAt             DateTime  @default(now())
-
-  // Onboarding fields
-  onboardingCompleted   Boolean   @default(false)
-  userType              UserType?
-  businessDescription   String?
-  yearsExperience       Int?
-  monthlyDealsVolume    Int?
-  investmentRange       String?
-  focusAreas            Json?     // Array of focus areas
-  linkedInProfile       String?
-  companyWebsite        String?
-  phoneNumber           String?
-  referralSource        String?
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
 
   // Relations
-  profile               Profile?
-  assets                Asset[]
-  wants                 Want[]
-  listings              Listing[]
-  sentMessages          Message[] @relation("SentMessages")
-  agreementDrafts       AgreementDraft[]
+  profile           Profile?
+  assets            Asset[]
+  wants             Want[]
+  listings          Listing[]
+  sentMessages      Message[]       @relation("SentMessages")
+  agreementDrafts   AgreementDraft[]
 
   @@map("users")
 }
