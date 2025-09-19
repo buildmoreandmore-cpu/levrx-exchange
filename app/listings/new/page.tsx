@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { UserButton, useAuth } from '@clerk/nextjs'
 import GroupedSelect from '@/components/forms/GroupedSelect'
 import ChipGroup from '@/components/forms/ChipGroup'
+import PhotoUpload from '@/components/forms/PhotoUpload'
 import AppHeader from '@/components/ui/AppHeader'
 import {
   PACKAGE_TYPES,
@@ -33,7 +34,8 @@ interface FormData {
   category: Category
   title: string
   description: string
-  
+  photos: string[]
+
   // Cash fields
   cashSource?: string
   amount?: number
@@ -41,7 +43,7 @@ interface FormData {
   maxTerm?: number
   targetReturn?: number
   geography?: string
-  
+
   // Paper fields
   paperType?: string
   upb?: number
@@ -50,7 +52,7 @@ interface FormData {
   paymentType?: string
   collateralDescription?: string
   acceptableTerms?: string[]
-  
+
   // Stuff fields
   itemType?: string
   estimatedValue?: number
@@ -101,6 +103,7 @@ function NewListingContent() {
     category: initialCategory,
     title: '',
     description: '',
+    photos: [],
     sellerReasons: [],
     benefitsSought: [],
     benefitsToNewOwner: [],
@@ -350,6 +353,18 @@ function NewListingContent() {
           placeholder="Provide detailed information..."
         />
         {errors.description && <p className="mt-1 text-sm text-red-600">{errors.description}</p>}
+      </div>
+
+      {/* Photo Upload */}
+      <div className="mb-6">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Photos
+        </label>
+        <PhotoUpload
+          photos={formData.photos}
+          onChange={(photos) => updateFormData({ photos })}
+          maxPhotos={10}
+        />
       </div>
     </>
   )

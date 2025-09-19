@@ -183,10 +183,10 @@ export default function TradeGrid() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            What can you trade on LevrX?
+            What can you trade on LVRXchange?
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Whether you have assets to offer or needs to fulfill, LevrX connects you with the right opportunities across multiple asset classes.
+            Whether you have assets to offer or needs to fulfill, LVRXchange connects you with the right opportunities across multiple asset classes.
           </p>
         </div>
 

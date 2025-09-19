@@ -9,7 +9,7 @@ export default function DemoPage() {
         </div>
         
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          LevrX Demo
+          LVRXchange Demo
         </h1>
         
         <p className="text-xl text-gray-600 mb-8">

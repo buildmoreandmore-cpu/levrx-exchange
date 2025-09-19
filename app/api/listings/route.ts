@@ -21,15 +21,16 @@ export async function POST(request: NextRequest) {
     console.log('🔍 Step 5: Using shared Prisma client')
 
     // Extract common fields
-    const { 
+    const {
       kind: rawKind, // HAVE or WANT
       category: rawCategory, // Cash, Paper, Stuff, Property
       title: rawTitle,
       description: rawDescription,
       notes,
+      photos, // Array of photo URLs
       // Cash fields
       cashSource, amount, targetReturn, minTerm, maxTerm, geography,
-      // Paper fields  
+      // Paper fields
       paperType, upb, interestRate, term, paymentType, collateralDescription, acceptableTerms,
       // Stuff fields
       itemType, estimatedValue, condition, exchangePreferences,
@@ -58,6 +59,33 @@ export async function POST(request: NextRequest) {
         { error: "Invalid 'kind'. Must be HAVE or WANT." },
         { status: 400 }
       )
+    }
+
+    // Validate photos if provided
+    if (photos) {
+      if (!Array.isArray(photos)) {
+        return NextResponse.json(
+          { success: false, message: "Photos must be an array" },
+          { status: 400 }
+        )
+      }
+
+      if (photos.length > 10) {
+        return NextResponse.json(
+          { success: false, message: "Maximum of 10 photos allowed" },
+          { status: 400 }
+        )
+      }
+
+      // Validate each photo URL
+      for (const url of photos) {
+        if (typeof url !== 'string' || !isValidUrl(url)) {
+          return NextResponse.json(
+            { success: false, message: "Invalid photo URL format" },
+            { status: 400 }
+          )
+        }
+      }
     }
 
     // Create user if doesn't exist
@@ -140,6 +168,7 @@ export async function POST(request: NextRequest) {
             description,
             estValueNumeric: amount || estimatedValue || price || upb || null,
             terms: structuredData,
+            photos: photos || null,
           },
         })
         assetId = asset.id
@@ -152,6 +181,7 @@ export async function POST(request: NextRequest) {
             description,
             targetValueNumeric: amount || estimatedValue || price || upb || null,
             constraints: structuredData,
+            photos: photos || null,
           },
         })
         wantId = want.id
@@ -274,5 +304,15 @@ export async function GET(request: NextRequest) {
       { error: 'Internal server error' },
       { status: 500 }
     )
+  }
+}
+
+// Helper function to validate URLs
+function isValidUrl(string: string): boolean {
+  try {
+    const url = new URL(string)
+    return url.protocol === 'http:' || url.protocol === 'https:'
+  } catch (_) {
+    return false
   }
 }

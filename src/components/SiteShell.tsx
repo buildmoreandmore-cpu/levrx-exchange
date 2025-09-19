@@ -106,7 +106,7 @@ export default function SiteShell({ children, user }: SiteShellProps) {
               <div className="w-8 h-8 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center">
                 <span className="text-white font-bold text-sm">L</span>
               </div>
-              <span className="text-xl font-bold text-gray-900">LevrX</span>
+              <span className="text-xl font-bold text-gray-900">LVRXchange</span>
             </Link>
             
             <button

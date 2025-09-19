@@ -100,8 +100,8 @@ export async function POST(req: NextRequest) {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: `LevrX ${planDetails.name} Plan`,
-              description: `Monthly subscription to LevrX ${planDetails.name}`,
+              name: `LVRXchange ${planDetails.name} Plan`,
+              description: `Monthly subscription to LVRXchange ${planDetails.name}`,
             },
             unit_amount: planDetails.price,
             recurring: {

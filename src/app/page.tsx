@@ -28,7 +28,7 @@ export default function Home() {
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "LevrX",
+    "name": "LVRXchange",
     "description": "AI-powered real estate exchange platform connecting properties, capital, and opportunities",
     "url": "https://levrx-exchange.vercel.app",
     "logo": "https://levrx-exchange.vercel.app/logo.png",
@@ -47,7 +47,7 @@ export default function Home() {
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "LevrX",
+    "name": "LVRXchange",
     "description": "Real estate exchange platform powered by AI matching",
     "url": "https://levrx-exchange.vercel.app",
     "potentialAction": {
@@ -68,7 +68,7 @@ export default function Home() {
     "description": "AI-powered marketplace for real estate opportunities, partnerships, and property trading",
     "provider": {
       "@type": "Organization",
-      "name": "LevrX"
+      "name": "LVRXchange"
     },
     "serviceType": "Real Estate Technology Platform",
     "areaServed": "United States",
@@ -347,7 +347,7 @@ export default function Home() {
                   <div className="w-9 h-9 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center">
                     <span className="text-white font-bold text-lg">L</span>
                   </div>
-                  <span className="text-2xl font-bold">LevrX</span>
+                  <span className="text-2xl font-bold">LVRXchange</span>
                 </div>
                 <p className="text-gray-400">The real estate exchange where assets and opportunities find each other.</p>
               </div>
@@ -382,7 +382,7 @@ export default function Home() {
             
             <div className="border-t border-gray-800 mt-12 pt-8 text-center">
               <p className="text-gray-400 text-sm">
-                Copyright © 2025 LevrX. All rights reserved.
+                Copyright © 2025 LVRXchange. All rights reserved.
               </p>
             </div>
           </div>

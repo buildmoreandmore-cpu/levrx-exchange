@@ -94,7 +94,7 @@ export default function DemoAgreements() {
             <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-lg">L</span>
             </div>
-            <h1 className="text-2xl font-bold text-gray-900">LevrX</h1>
+            <h1 className="text-2xl font-bold text-gray-900">LVRXchange</h1>
           </Link>
           <div className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-medium">
             DEMO MODE

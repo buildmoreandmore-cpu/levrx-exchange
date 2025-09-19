@@ -1,6 +1,6 @@
-# LevrX - The Leverage Exchange
+# LVRXchange - The Leverage Exchange
 
-LevrX is a marketplace where users can list what they have (equity, cash flow, equipment, credit capacity, skills) and what they want (cash, partner, equipment, tenant-buyer, etc.). The platform uses AI to match listings and propose deal structures.
+LVRXchange is a marketplace where users can list what they have (equity, cash flow, equipment, credit capacity, skills) and what they want (cash, partner, equipment, tenant-buyer, etc.). The platform uses AI to match listings and propose deal structures.
 
 ## Features
 

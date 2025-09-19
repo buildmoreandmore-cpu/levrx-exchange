@@ -198,7 +198,7 @@ export default function ListingDetail() {
               <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-lg">L</span>
               </div>
-              <h1 className="text-2xl font-bold text-gray-900">LevrX</h1>
+              <h1 className="text-2xl font-bold text-gray-900">LVRXchange</h1>
             </Link>
             <UserButton />
           </div>
@@ -248,7 +248,7 @@ export default function ListingDetail() {
               <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-lg">L</span>
               </div>
-              <h1 className="text-2xl font-bold text-gray-900">LevrX</h1>
+              <h1 className="text-2xl font-bold text-gray-900">LVRXchange</h1>
             </Link>
             
             {/* Navigation breadcrumb */}

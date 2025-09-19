@@ -12,7 +12,7 @@ export default function DemoData() {
             <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-lg">L</span>
             </div>
-            <h1 className="text-2xl font-bold text-gray-900">LevrX</h1>
+            <h1 className="text-2xl font-bold text-gray-900">LVRXchange</h1>
           </Link>
           <div className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-medium">
             DEMO MODE
@@ -24,7 +24,7 @@ export default function DemoData() {
       <main className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome to LevrX Demo
+            Welcome to LVRXchange Demo
           </h1>
           <p className="text-gray-600">Explore the marketplace functionality with sample data</p>
         </div>

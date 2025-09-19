@@ -11,7 +11,7 @@ export const faqData = [
   {
     id: 'markets',
     question: 'What markets are supported?',
-    answer: 'LevrX currently supports major metropolitan areas across the United States, including primary and secondary markets. We\'re expanding coverage based on user demand and market activity. You can list properties and opportunities nationwide, with AI matches prioritizing geographic compatibility and market dynamics.'
+    answer: 'LVRXchange currently supports major metropolitan areas across the United States, including primary and secondary markets. We\'re expanding coverage based on user demand and market activity. You can list properties and opportunities nationwide, with AI matches prioritizing geographic compatibility and market dynamics.'
   },
   {
     id: 'privacy',
@@ -26,7 +26,7 @@ export const faqData = [
   {
     id: 'fees',
     question: 'Do you take a fee on matches?',
-    answer: 'No. LevrX operates on a transparent subscription model only. We don\'t take transaction fees, success fees, or commissions on deals made through our platform. Your subscription gives you unlimited access to matches, messaging, and agreement tools.'
+    answer: 'No. LVRXchange operates on a transparent subscription model only. We don\'t take transaction fees, success fees, or commissions on deals made through our platform. Your subscription gives you unlimited access to matches, messaging, and agreement tools.'
   },
   {
     id: 'agreements',
@@ -52,7 +52,7 @@ export default function FAQ() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
-          <p className="text-xl text-gray-600">Everything you need to know about LevrX</p>
+          <p className="text-xl text-gray-600">Everything you need to know about LVRXchange</p>
         </div>
 
         <div className="space-y-4">
@@ -102,7 +102,7 @@ export default function FAQ() {
         {/* Disclaimer and Contact */}
         <div className="mt-16 pt-8 border-t border-gray-200 text-center">
           <p className="text-gray-600 mb-4">
-            <strong>Disclaimer:</strong> LevrX is an informational tool and does not provide legal or financial advice.
+            <strong>Disclaimer:</strong> LVRXchange is an informational tool and does not provide legal or financial advice.
           </p>
           <p className="text-gray-600">
             Have questions not covered here?{' '}

@@ -237,7 +237,7 @@ export default function LeadCapture() {
                 </form>
 
                 <p className="mt-3 text-xs text-gray-500">
-                  We'll only email you about LevrX. Unsubscribe anytime.
+                  We'll only email you about LVRXchange. Unsubscribe anytime.
                 </p>
               </>
             ) : (
@@ -251,7 +251,7 @@ export default function LeadCapture() {
                   Thanks for signing up!
                 </h3>
                 <p className="text-sm text-gray-500">
-                  We'll keep you updated on LevrX developments.
+                  We'll keep you updated on LVRXchange developments.
                 </p>
               </div>
             )}

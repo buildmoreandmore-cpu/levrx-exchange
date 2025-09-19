@@ -5,7 +5,7 @@
 <circle cx="70" cy="65" r="6" fill="#F87171"/>
 <circle cx="90" cy="65" r="6" fill="#FBBF49"/>
 <circle cx="110" cy="65" r="6" fill="#34D058"/>
-<text x="140" y="70" font-family="Inter, sans-serif" font-size="14" font-weight="500" fill="white">LevrX Dashboard</text>
+<text x="140" y="70" font-family="Inter, sans-serif" font-size="14" font-weight="500" fill="white">LVRXchange Dashboard</text>
 
 <rect x="80" y="130" width="350" height="400" rx="8" fill="#FFFFFF" stroke="#E5E7EB"/>
 <text x="100" y="160" font-family="Inter, sans-serif" font-size="18" font-weight="600" fill="#111827">Active Listings</text>

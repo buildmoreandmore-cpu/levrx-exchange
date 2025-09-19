@@ -162,44 +162,6 @@ export default function About() {
           </div>
         </section>
 
-        {/* Team Section */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Leadership Team</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200 text-center">
-              <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full mx-auto mb-6 flex items-center justify-center">
-                <span className="text-white text-2xl font-bold">JD</span>
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">John Doe</h3>
-              <p className="text-indigo-600 font-medium mb-3">CEO & Co-Founder</p>
-              <p className="text-gray-700 text-sm">
-                Former Goldman Sachs VP with 15+ years in real estate finance. Led $5B+ in commercial real estate transactions.
-              </p>
-            </div>
-
-            <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200 text-center">
-              <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full mx-auto mb-6 flex items-center justify-center">
-                <span className="text-white text-2xl font-bold">JS</span>
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Jane Smith</h3>
-              <p className="text-indigo-600 font-medium mb-3">CTO & Co-Founder</p>
-              <p className="text-gray-700 text-sm">
-                Former Google AI researcher specializing in machine learning and data science. PhD in Computer Science from Stanford.
-              </p>
-            </div>
-
-            <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200 text-center">
-              <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full mx-auto mb-6 flex items-center justify-center">
-                <span className="text-white text-2xl font-bold">MB</span>
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Mike Brown</h3>
-              <p className="text-indigo-600 font-medium mb-3">Chief Revenue Officer</p>
-              <p className="text-gray-700 text-sm">
-                Real estate industry veteran with 20+ years building successful investor networks and closing $10B+ in deals.
-              </p>
-            </div>
-          </div>
-        </section>
 
         {/* Contact CTA */}
         <section className="text-center">

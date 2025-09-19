@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { UserButton, useAuth } from '@clerk/nextjs'
 import GroupedSelect from '@/components/forms/GroupedSelect'
 import ChipGroup from '@/components/forms/ChipGroup'
+import PhotoUpload from '@/components/forms/PhotoUpload'
 import AppHeader from '@/components/ui/AppHeader'
 import {
   PACKAGE_TYPES,
@@ -33,6 +34,7 @@ interface FormData {
   category: Category
   title: string
   description: string
+  photos: string[]
 
   // Cash fields
   cashSource?: string
@@ -87,6 +89,7 @@ function EditListingContent() {
     category: 'Property',
     title: '',
     description: '',
+    photos: [],
     sellerReasons: [],
     benefitsSought: [],
     benefitsToNewOwner: [],
@@ -123,6 +126,7 @@ function EditListingContent() {
             category: terms?.category || 'Property',
             title: item?.title || '',
             description: item?.description || '',
+            photos: item?.photos || [],
 
             // Property fields (most common case)
             packageType: terms?.packageType,
@@ -349,6 +353,18 @@ function EditListingContent() {
           placeholder="Provide detailed information..."
         />
         {errors.description && <p className="mt-1 text-sm text-red-600">{errors.description}</p>}
+      </div>
+
+      {/* Photo Upload */}
+      <div className="mb-6">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Photos
+        </label>
+        <PhotoUpload
+          photos={formData.photos}
+          onChange={(photos) => updateFormData({ photos })}
+          maxPhotos={10}
+        />
       </div>
     </>
   )

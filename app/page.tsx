@@ -34,11 +34,11 @@ export default function Home() {
     "@type": "Organization",
     "name": "LVRXchange",
     "description": "AI-powered real estate exchange platform connecting properties, capital, and opportunities",
-    "url": "https://www.lvrxchange.com",
-    "logo": "https://www.lvrxchange.com/logo.png",
+    "url": "https://www.levrx.com",
+    "logo": "https://www.levrx.com/logo.png",
     "sameAs": [
-      "https://twitter.com/lvrxchange",
-      "https://linkedin.com/company/lvrxchange"
+      "https://twitter.com/levrx",
+      "https://linkedin.com/company/levrx"
     ],
     "contactPoint": {
       "@type": "ContactPoint",
@@ -53,12 +53,12 @@ export default function Home() {
     "@type": "WebSite",
     "name": "LVRXchange",
     "description": "Real estate exchange platform powered by AI matching",
-    "url": "https://www.lvrxchange.com",
+    "url": "https://www.levrx.com",
     "potentialAction": {
       "@type": "SearchAction",
       "target": {
         "@type": "EntryPoint",
-        "urlTemplate": "https://www.lvrxchange.com/search?q={search_term_string}"
+        "urlTemplate": "https://www.levrx.com/search?q={search_term_string}"
       },
       "query-input": "required name=search_term_string"
     }
